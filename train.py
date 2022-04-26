@@ -564,10 +564,10 @@ if __name__ == '__main__':
     # reading the ode parameters and the initial/terminal states
     for arg in parslist:
         pars_df = pd.read_csv(parsdir + patientNo + '/' + arg)
-        K, states, pars, best_pars = [np.array(pars_df.loc[i, ~np.isnan(pars_df.loc[i, :])]) for i in range(5)]
+        _, K, states, pars, best_pars = [np.array(pars_df.loc[i, ~np.isnan(pars_df.loc[i, :])]) for i in range(5)]
         PARS_LIST.append(best_pars)
     # Init = np.array([mean_v / Mean_psa * true_psa[0] / cell_size, 1e-4 * K[1], true_psa[0]])
-    Init_states = states
+    Init_states = states[:3]
     PARS_ARR = np.stack(PARS_LIST)
     pars = np.mean(PARS_ARR, axis=0)
     args.patients_pars = (K, Init_states, pars)

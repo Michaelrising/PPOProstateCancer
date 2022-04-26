@@ -51,7 +51,7 @@ class CancerControl(gym.Env, ABC):
         # the longest duration for the first line drug is 300 weeks, 
         # for second line drug, the longest duration is 12 months
         # Note that for LEU, the total dosage should be 7.5*8 ml for one treatment duration
-        pp = (self.K, self.pars, self.type)
+        pp = (self.K, self.pars)
         self.cancerode = CancerODEGlv(*pp)
         self.dose = np.zeros(2)
         self.normalized_coef = np.append(self.K, self.K[0] / (1.1 * 5) * self.cancerode.cell_size * 22.1).reshape(-1)
@@ -204,8 +204,9 @@ class CancerControl(gym.Env, ABC):
 
         pars = self.pars
         phi = pars[-3]
-        A = self.A.copy()
-        A[0,1] = A[1,0] = 1 / (1 + np.exp(-pars[-2] * np.array([t /28/12])))
+        # A = self.A.copy()
+        A01 = A10 = 1 / (1 + np.exp(-pars[-2] * np.array([t /28/12])))
+        A = np.array([1, A01.item(), A10.item(), 1]).reshape(2,2)
         K = self.K
         states = self.states.copy()
         x, psa = states[0:2], states[2]
@@ -215,9 +216,9 @@ class CancerControl(gym.Env, ABC):
         # normalized_vai = -np.log10(x[1])/np.log10(K[1]) * 100 if x[1] > 1 else 0
         vai = x[1]/K[1]
         # normalized_c2 = np.log10(x[0])/np.log10(K[0]) * A[0,1] * 100
-        c1 = (x[1] * A[1,0] / K[0] * 4)**phi
-        c2 = (x[0] * A[0,1] / K[1])**phi # the competition index from AD to AI cells
-        c1, c2 = (x @ self.A / self.K) ** phi
+        c1 = (x[1] * A10 / K[0] * 4)**phi
+        c2 = (x[0] * A01 / K[1])**phi # the competition index from AD to AI cells
+        c1, c2 = (x @ A / self.K) ** phi
         potential = self.weight @ np.array([-vt, -vai]) # (np.log(vai) + np.log(vad))
         return potential, c1, c2
 
@@ -261,14 +262,13 @@ class CancerControl(gym.Env, ABC):
 
 
 class CancerODEGlv:
-    def __init__(self, K, pars, type):
-        self.A = torch.tensor([1, 0.5, 0.5, 1]).reshape(2,2)
+    def __init__(self, K, pars):
+        self.A = np.array([1, 0.5, 0.5, 1]).reshape(2,2)
         self.K = K
         self.pars = pars
         self.ts = np.array([0, 1])
         self.drug = np.zeros((1,2))
         self.cell_size = 5.236e-10  # 4. / 3. * 3.1415926 * (5e-4cm) ** 3   # cm^3
-        self.type = type
 
     def forward(self, t, y):
         r = self.pars[0:2]

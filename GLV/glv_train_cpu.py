@@ -11,7 +11,7 @@ from torch import nn, optim
 from LoadData import LoadData
 from _utils import *
 from torch.utils.tensorboard import SummaryWriter
-from .ode_glv_cpu import ODEGlv_CPU
+from ode_glv_cpu import *
 from collections import deque
 
 
@@ -177,7 +177,7 @@ def train_glv(args, alldata):
                 Init = torch.tensor([mean_v / mean_psa * PSA[0] / cell_size, 1e-5 * K2, PSA[0]], dtype=torch.float)
                 init = Init.detach().numpy()
                 save_path = "./analysis-dual-sigmoid/model_pars/"+patientNo+"/Args_" + str(args.t) + "-" + patientNo + ".csv"
-                ODEGlv_CPU.save_pars(init, best_pars, save_path)
+                cancerode.save_pars(init, best_pars, save_path)
         if epoch > 1500:
             early_stopping(validate_loss, pars)
         if early_stopping.early_stop:

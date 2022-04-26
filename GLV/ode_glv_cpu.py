@@ -141,7 +141,7 @@ class ODEGlv_CPU(xitorch.EditableModule):
         dxdt = torch.multiply(
             r * x, (1 - (x @ A / self.K) ** phi - self.Response[index] @ Beta))  # -
         dpdt = betac * sum(x) * self.cell_size - gamma * p
-        df = np.append(dxdt, dpdt)
+        df = torch.cat((dxdt, dpdt.view(-1)))
         return df
 
     def save_pars(self, init, best_pars, save_path):
