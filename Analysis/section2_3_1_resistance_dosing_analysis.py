@@ -2,38 +2,31 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from _utils import  *
+from _utils import *
 import seaborn as sns
+from sklearn.cluster import KMeans
+from sklearn.metrics import roc_curve, auc
+from sklearn.preprocessing import normalize
 import scipy.stats as st
 from scipy import interpolate
-from scipy.stats import ttest_rel
 a1, a2, a3, a4, a5, a6 = AnyObject(), AnyObject(), AnyObject(), AnyObject(), AnyObject(), AnyObject()
 
 ##############################################################
-##################### Response Group #######################
+################# Resistance Group Fig4.a ####################
 ##############################################################
-cs = sns.color_palette("Paired")
-# clustering = pd.read_csv('./kmeans_clustering_results.csv', names=['patientNo', 'label', 'r_HD', 'r_HI', 'Gamma', 'cluster'], header = 0)
-# # response = clustering[clustering.cluster == 1]
-# uniform = [1, 3, 6, 30, 37, 44, 60, 77, 86, 87, 92, 97] # [1, 3, 15, 30, 31, 44, 61, 66, 77, 84, 86, 87, 91, 100, 106]
-# adaptive = [2, 15, 16, 29, 31,40, 42, 46, 50, 56, 61, 66, 83, 84, 91, 93, 95, 99, 100, 106, 108] # [2, 6, 16, 29, 37, 40, 42, 46, 50, 56, 60, 83, 92, 93, 95, 97, 99, 108]
-# response = list(set(uniform + adaptive + [11, 102]) - set([83]))
-response = [1, 2, 3, 4, 6, 13, 15, 16, 17, 20, 24, 29, 30, 31, 32, 37, 40, 42, 44, 46, 50, 51,
-            58, 60, 61, 62, 63, 66, 71, 75, 77, 78, 79, 84, 86, 87, 91, 92, 93, 94, 95, 96, 97,
-            100, 102, 104, 105, 106, 108]
-response.sort()
+cs = sns.color_palette('Paired')
+resistance = [11, 12, 19, 25, 36,52, 54, 85, 88, 99, 101]
+resistance.sort()
 simulation_end_cinical = pd.read_csv("../Experts_policy/analysis/s_end_list.csv",names=['Days'],index_col=0, header=0)
-parsdir = "../GLV/analysis-dual-sigmoid/model_pars/"
 patientLables = []
 patientCPA = []
 patientLEU = []
 patientSurvivalTime = []
 simu_stop = []
-response_uniform = []
-response_adaptive = []
-response_all = []
-pars_all_patients = []
-for i in response:
+resistance_uniform = []
+resistance_adaptive = []
+resistance_all = []
+for i in resistance:
     if len(str(i)) == 1:
         patientNo = "patient00" + str(i)
     elif len(str(i)) == 2:
@@ -41,11 +34,7 @@ for i in response:
     else:
         patientNo = "patient" + str(i)
     print(patientNo)
-    # if i in uniform:
-    #     response_uniform.append(patientNo)
-    # else:
-    #     response_adaptive.append(patientNo)
-    response_all.append(patientNo)
+    resistance_all.append(patientNo)
     doseSeq = pd.read_csv("../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv", names = ["Month", "CPA", "LEU"], header=0)
     patientLables.append(patientNo)
     patientSurvivalTime.append(np.array(doseSeq).shape[0] * 28)
@@ -70,9 +59,9 @@ onCpa = "#FF0000"
 onLeu = "#87CEEB"
 offColor = "#696969"
 plt.style.use(["science", 'nature'])
-fig = plt.figure(figsize = (40, 0.4 * len(response_all)))
+fig = plt.figure(figsize = (40, 0.4 * len(resistance_all)))
 ax1 = fig.add_subplot(1,2,1)
-for l, patient in enumerate(response_all):
+for l, patient in enumerate(resistance_all):
     cpa_ppo = df_ppo_CPA.loc[patient, ~np.isnan(df_ppo_CPA.loc[patient])]
     leu_ppo = df_ppo_LEU.loc[patient, ~np.isnan(df_ppo_LEU.loc[patient])]
     for month, cpaData in enumerate(cpa_ppo):
@@ -87,22 +76,22 @@ for l, patient in enumerate(response_all):
             # ax.barh(patientLables[patient], 28, left = month * 28, hatch = "/", label = "LEU-ON",alpha = 0, height = 0.5, tick_label = None)
         if cpaData == 0 and leuData != 0:
             barcontainer = ax1.barh(patient+'-p', 28, left=month * 28, color=onLeu, hatch="///",
-                    alpha=0.01, height=0.8, tick_label=None)
+                    alpha=0.001, height=0.8, tick_label=None, zorder=2)
         if ~np.isnan(df_ppo_CPA.loc[patient, month]) and cpaData == 0 and leuData == 0:
             barcontainer = ax1.barh(patient+'-p', 28, left=month * 28, color=offColor, height=0.8, tick_label=None)
     s1 = plt.scatter(x=barcontainer.patches[0].get_x() + barcontainer.patches[0].get_width(),
                 y=barcontainer.patches[0].get_y() + barcontainer.patches[0].get_height() / 2, marker=4, color='black',
                 s=250, label = 'EOS', zorder=3)
 locs, labels = plt.yticks()
-labels = response_all
-plt.yticks(np.arange(0, len(response_all), 1), [], fontsize=30)
+labels = resistance_all
+plt.yticks(np.arange(0, len(resistance_all), 1), [], fontsize=30)
 plt.ylabel("Patient No.", fontsize = 40)
 plt.xticks(fontsize=40)
 plt.xlabel("Time (Day)", fontsize=40)
 plt.xlim(-10, 3600)
 
 ax2 = fig.add_subplot(1,2,2)
-for l, patient in enumerate(response_all):
+for l, patient in enumerate(resistance_all):
     clinical_data = pd.read_csv("../Data/dataTanaka/Bruchovsky_et_al/" + patient + ".txt", header=None)
     ONOFF = np.array(clinical_data.loc[:, 7])
     drugOnDays = 0
@@ -115,11 +104,11 @@ for l, patient in enumerate(response_all):
     for ii in range(len(ONOFF) - 1):
         cpa = CPA[ii]
         leu = LEU[ii]
-        if ~np.isnan(cpa) and ONOFF[ii]:
+        if ~np.isnan(cpa):
             barcontainer = ax2.barh(patient + '-c', Days[ii + 1] - Days[ii], left=Days[ii], color=onColor, height=0.8, alpha = cpa/200,
                                    tick_label=None)
-        if ~np.isnan(leu) and ONOFF[ii]:
-            barcontainer = ax2.barh(patient + '-c', max(28 * int(leu/7.5), Days[ii + 1] - Days[ii]), left=Days[ii], hatch="///",color =onLeu,alpha=0.01,
+        if ~np.isnan(leu):
+            barcontainer = ax2.barh(patient + '-c', max(28 * int(leu/7.5), Days[ii + 1] - Days[ii]), left=Days[ii], hatch="///",color =onLeu,alpha = 0.001,
                                    height=0.8, tick_label=None, zorder=2)
         if np.isnan(leu) and np.isnan(cpa):
             barcontainer = ax2.barh(patient + '-c', Days[ii + 1] - Days[ii], left=Days[ii], color=offColor, height=0.8,
@@ -143,8 +132,8 @@ for l, patient in enumerate(response_all):
             if extra_cpa:
                 ax2.barh(patient+"-c", length, left=left, color=onCpa,alpha =extra_cpa/200, height=0.8, tick_label=None)
             if extra_leu:
-                ax2.barh(patient + '-c', 28 , left=left, hatch="///", color=onLeu, alpha=0.01,
-                        height=0.8, tick_label=None)
+                ax2.barh(patient + '-c', 28 , left=left, hatch="///", color=onLeu, alpha=0.001,
+                        height=0.8, tick_label=None, zorder=2)
             if not extra_leu and not extra_cpa:
                 ax2.barh(patient+'-c', length, left=left, color=offColor, height=0.8, alpha =1, tick_label=None)
             left += 28
@@ -158,23 +147,26 @@ for l, patient in enumerate(response_all):
 
 locs, labels = plt.yticks()
 labels = []
-plt.yticks(np.arange(0, len(response_all), 2), labels, fontsize = 40)
+plt.yticks(np.arange(0, len(resistance_all), 2), labels, fontsize = 40)
 # plt.ylabel("1 $\longleftarrow$ Patient No. $\longrightarrow$ 108", fontsize = 24)
 plt.xticks(fontsize = 40)
 plt.xlabel("Time (Day)", fontsize = 40)
 plt.xlim(-10, 3600)
 plt.legend([ a1, a2, a3, a4, s1, s2 ], ['C$\&$L-On',"Cpa-On ","Leu-On" ,'Treat-Off', 'EOS', 'EOC'],
            handler_map={a1: AnyObjectHandler(color=onColor), a2:AnyObjectHandler(color=onCpa, _hatch=None),
-                        a3: AnyObjectHandler(color=colorAlpha_to_rgb(cs[0], 0)[0], alpha = 1), a4: AnyObjectHandler(color=offColor,alpha=1, _hatch=None)}
-           , fontsize =30, loc = 2, bbox_to_anchor=(-0.225, 0.7))
-plt.savefig("./Figure/Response_group_Strategy.png", dpi = 500)
+                        a3: AnyObjectHandler(color=colorAlpha_to_rgb(cs[0], 0.01)[0], alpha = 1), a4: AnyObjectHandler(color=offColor,alpha=1, _hatch=None)}
+           , fontsize =30, loc = 2, bbox_to_anchor=(-0.225, 1.05))
+plt.savefig("./Figure/Resistance_group_Strategy.png", dpi = 500)
 plt.show()
 plt.close()
 
+#####################################################################
+##### dosage reduxtion of resistance patients #######################
+#####################################################################
 patientLables = []
 PSAThresholds = []
 patientSurvivalTime = []
-for i in response:
+for i in resistance:
     if len(str(i)) == 1:
         patientNo = "patient00" + str(i)
     elif len(str(i)) == 2:
@@ -189,22 +181,22 @@ for i in response:
     ratio_psa = diff1_psa/psa[:-1]
     PSAThresholds.append(ratio_psa)
 
-ppo_off= []
-ppo_on = []
+## daily drug administration ##
 ppo_cpa_daily = []
 ppo_leu_monthly = []
+ppo_off= []
+ppo_on = []
 ppo_onoff_freq = []
 df_ppo_drug = df_ppo_CPA + df_ppo_LEU
 for patient_i in df_ppo_drug.index:
     patient_drug = np.array(df_ppo_drug.loc[patient_i, ~np.isnan(df_ppo_drug.loc[patient_i])])
     off_percentage = patient_drug[patient_drug == 0].shape[0]/patient_drug.shape[0]
-    on_percentage = patient_drug[patient_drug != 0].shape[0]/patient_drug.shape[0]
     ppo_off.append(off_percentage)
-    ppo_on.append(on_percentage)
+    ppo_on.append(1 - off_percentage)
     on_off = 0
-    for i in range(patient_drug.shape[0] - 1):
-        if patient_drug[i] !=patient_drug[i + 1]:
-            on_off += 1
+    for i in range(patient_drug.shape[0]-1):
+        if patient_drug[i] != patient_drug[i + 1]:
+            on_off+=1
     ppo_onoff_freq.append(on_off)
     patient_cpa = np.array(df_ppo_CPA.loc[patient_i, ~np.isnan(df_ppo_CPA.loc[patient_i])])
     cpa_daily = sum(patient_cpa)/(patient_cpa.shape[0]) * 200
@@ -218,9 +210,8 @@ ppo_off = pd.DataFrame(ppo_off, index=patientLables)
 ppo_on = pd.DataFrame(ppo_on, index=patientLables)
 ppo_onoff_freq = pd.DataFrame(ppo_onoff_freq, index=patientLables)
 
-print("mean ppo fre:"+ str(ppo_onoff_freq.mean()))
 off_clinical = []
-on_clinical = []
+on_clinical= []
 cpa_clinical_daily = []
 leu_clinical_monthly = []
 clinical_onoff_freq = []
@@ -236,8 +227,8 @@ for patient_i in df_ppo_drug.index:
     on_clinical.append(on_percentage)
     on_off = 0
     for i in range(onoff.shape[0] - 1):
-        if onoff[i] != onoff[i + 1]:
-            on_off += 1
+        if onoff[i] != onoff[i+1]:
+            on_off+=1
     clinical_onoff_freq.append(on_off)
     patient_cpa = np.array(clinical_data.loc[:, 2])
     clinical_cpa_daily = np.sum(patient_cpa[~np.isnan(patient_cpa)] * Days[~np.isnan(patient_cpa)])/(clinical_data.loc[clinical_data.shape[0]-1, 9] - clinical_data.loc[0, 9])
@@ -251,40 +242,11 @@ on_clinical = pd.DataFrame(on_clinical, index = patientLables)
 cpa_clinical_daily = pd.DataFrame(cpa_clinical_daily, index=patientLables)
 leu_clinical_monthly = pd.DataFrame(leu_clinical_monthly, index=patientLables)
 clinical_onoff_freq = pd.DataFrame(clinical_onoff_freq, index=patientLables)
-
-print("Mean clinical feq:" + str(clinical_onoff_freq.mean()))
-
-
-#
-#
-# ### response_uniform #####
-# print('========================================')
-# print('=======response Uniform T-Test========')
-# print('Total therapy off:{}'.format(np.mean(ppo_off.loc[response_uniform]-off_clinical.loc[response_uniform]).item()))
-# print(ttest_rel(ppo_off.loc[response_uniform], off_clinical.loc[response_uniform]))
-# print('Daily CPA off: {}'.format(-np.mean(ppo_cpa_daily.loc[response_uniform]- cpa_clinical_daily.loc[response_uniform]).item()))
-# print(ttest_rel(ppo_cpa_daily.loc[response_uniform], cpa_clinical_daily.loc[response_uniform]))
-# print('Monthly LEU off: {}'.format(-np.mean(ppo_leu_monthly.loc[response_uniform]- leu_clinical_monthly.loc[response_uniform]).item()))
-# print(ttest_rel(ppo_leu_monthly.loc[response_uniform], leu_clinical_monthly.loc[response_uniform]))
-# print('========================================')
-#
-# ### response_adaptive #####
-# print('========================================')
-# print('=======response Adaptive T-Test========')
-# print('Total therapy off:{}'.format(np.mean(ppo_off.loc[response_adaptive]-off_clinical.loc[response_adaptive]).item()))
-# print(ttest_rel(ppo_off.loc[response_adaptive], off_clinical.loc[response_adaptive]))
-# print('Daily CPA off: {}'.format(-np.mean(ppo_cpa_daily.loc[response_adaptive]- cpa_clinical_daily.loc[response_adaptive]).item()))
-# print(ttest_rel(ppo_cpa_daily.loc[response_adaptive], cpa_clinical_daily.loc[response_adaptive]))
-# print('Monthly LEU off: {}'.format(-np.mean(ppo_leu_monthly.loc[response_adaptive]- leu_clinical_monthly.loc[response_adaptive]).item()))
-# print(ttest_rel(ppo_leu_monthly.loc[response_adaptive], leu_clinical_monthly.loc[response_adaptive]))
-# print('========================================')
-
-
-# all response
+from scipy.stats import ttest_rel
 
 print('========================================')
-print('=======Response All T-Test========')
-print('Total therapy on:{}'.format(np.mean((ppo_on-on_clinical)/on_clinical)))
+print('=======Resistance All T-Test========')
+print('Total therapy off:{}'.format(np.mean((ppo_on-on_clinical)/on_clinical)))
 print(ttest_rel(ppo_on, on_clinical))
 print('Daily CPA off: {}'.format(-np.mean((ppo_cpa_daily- cpa_clinical_daily)/cpa_clinical_daily).item()))
 print(ttest_rel(ppo_cpa_daily, cpa_clinical_daily))
@@ -292,9 +254,10 @@ print('Monthly LEU off: {}'.format(-np.mean((ppo_leu_monthly- leu_clinical_month
 print(ttest_rel(ppo_leu_monthly, leu_clinical_monthly))
 print('========================================')
 
-
-
-#### determine the ascending policy ####
+###########################################################
+############ determine the ascending policy ###############
+###### Supplementary analysis of resistance patients ######
+############# Supplementary Fig ###########################
 
 OFF_INTERVAL = []
 ON_INTERVAL = []
@@ -307,7 +270,7 @@ LEU_PRED = []
 off_len = 0
 on_len = 0
 off_on_len = 0
-for i in response:
+for i in resistance:
     if len(str(i)) == 1:
         patientNo = "patient00" + str(i)
     elif len(str(i)) == 2:
@@ -316,8 +279,8 @@ for i in response:
         patientNo = "patient" + str(i)
     print(patientNo)
     doseSeq = pd.read_csv("../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv", names = ["Month", "CPA", "LEU"], header=0)
-    doseSeq["CPA"] = doseSeq["CPA"] / 200
-    doseSeq["LEU"] = doseSeq["LEU"] / 7.5
+    doseSeq["CPA"] = doseSeq["CPA"]
+    doseSeq["LEU"] = doseSeq["LEU"]
     month = np.array(doseSeq['Month']).reshape(-1)
     drug = np.array(doseSeq["CPA"] + doseSeq["LEU"]).reshape(-1)
     cpa = doseSeq["CPA"]
@@ -338,6 +301,10 @@ for i in response:
                 off_interval.append(off)
             off = 0
             on += 1
+    if on != 0:
+        on_interval.append(on)
+    if off != 0:
+        off_interval.append(off)
     max_off = max(off_interval)
     max_on = max(on_interval)
     if len(off_interval) < len(on_interval):
@@ -346,7 +313,9 @@ for i in response:
     else:
         for _ in range(len(off_interval) - len(on_interval)):
             on_interval.append(1)
-    for ii in range(min(len(off_interval), len(on_interval))):
+    print(len(off_interval))
+    print(len(on_interval))
+    for ii in range(min(len(off_interval), len(off_interval))):
         ratio = off_interval[ii]/on_interval[ii]
         off_on_ratio.append(ratio)
     f = interpolate.interp1d(x = np.arange(len(off_on_ratio))/len(off_on_ratio), y = off_on_ratio, kind='nearest', fill_value="extrapolate")
@@ -386,16 +355,16 @@ for i in response:
     if one_course_drug != 0:
         drug_dose_change.append(one_course_drug)
     if len(cpa_dose_change) < len(drug_dose_change):
-        cpa_dose_change.append(0 if one_course_cpa == 0 else one_course_cpa)
+        cpa_dose_change.append(0 if one_course_cpa==0 else one_course_cpa)
     if len(leu_dose_change) < len(drug_dose_change):
-        leu_dose_change.append(0 if one_course_leu == 0 else one_course_leu)
+        leu_dose_change.append(0 if one_course_leu==0 else one_course_leu)
     print(len(drug_dose_change))
     if len(drug_dose_change) < len(on_interval):
         for _ in range(len(on_interval) - len(drug_dose_change)):
             drug_dose_change.append(0)
             leu_dose_change.append(0)
             cpa_dose_change.append(0)
-    for ii in range(min(len(off_interval), len(on_interval))):
+    for ii in range(min(len(off_interval), len(off_interval))):
         drug_dose_change[ii] = drug_dose_change[ii]/(on_interval[ii] + off_interval[ii])
         leu_dose_change[ii] = leu_dose_change[ii]/(on_interval[ii] + off_interval[ii])
         cpa_dose_change[ii] = cpa_dose_change[ii]/(on_interval[ii] + off_interval[ii])
@@ -403,7 +372,8 @@ for i in response:
     DRUG_PRED.append(f_drug(pred_x))
     f_cpa = interpolate.interp1d(x = np.arange(1, len(cpa_dose_change)+1)/(len(cpa_dose_change)), y = cpa_dose_change, kind='nearest',fill_value="extrapolate")
     CPA_PRED.append(f_cpa(pred_x))
-    f_cpa = interpolate.interp1d(x=np.arange(1, len(leu_dose_change)+1) / (len(leu_dose_change)), y=leu_dose_change, kind='nearest', fill_value="extrapolate")
+    f_cpa = interpolate.interp1d(x=np.arange(1, len(leu_dose_change)+1) / (len(leu_dose_change)), y=leu_dose_change,
+                                 kind='nearest', fill_value="extrapolate")
     LEU_PRED.append(f_cpa(pred_x))
 
 
@@ -464,8 +434,6 @@ plt.scatter(x=1,y=mean_leu[-1], marker=4, color='black',
                 s=180, label = 'EOS', zorder=3)
 plt.tight_layout()
 
-# plt.savefig('./Figure/response_I2ADT_off_on_ratio_change.eps', dpi=300, bbox_inches='tight')
-# plt.show()
 
 ## IADT ##
 OFF_ON_R_PRED = []
@@ -474,7 +442,7 @@ LEU_R_PRED=[]
 cpa = np.array([0, 50, 100, 150, 200])/200
 leu = np.array([0, 7.5])/7.5
 _action_set = np.stack((np.tile(cpa, 2), np.sort(leu.repeat(5))), axis=1)
-for l, patient in enumerate(response_all):
+for l, patient in enumerate(resistance_all):
     clinical_data = pd.read_csv("../Data/dataTanaka/Bruchovsky_et_al/" + patient + ".txt", header=None)
     ONOFF = np.array(clinical_data.loc[:, 7])
     Days = np.array(clinical_data.loc[:, 9]) - np.array(clinical_data.loc[0, 9])
@@ -547,7 +515,7 @@ for l, patient in enumerate(response_all):
     cpa_dose_change = np.zeros(min(len(off_interval), len(on_interval)))
     leu_dose_change = np.zeros(min(len(off_interval), len(on_interval)))
     for ii in range(min(len(off_interval), len(on_interval))):
-        ratio = off_interval[ii]/(on_interval[ii] + off_interval[ii])
+        ratio = off_interval[ii]/on_interval[ii]
         off_on_ratio.append(ratio)
         leu_dose_change[ii] = 28 * leu_interval[ii] / (on_interval[ii] + off_interval[ii])
         cpa_dose_change[ii] = cpa_interval[ii] / (on_interval[ii] + off_interval[ii])
@@ -618,5 +586,5 @@ plt.yticks(fontsize = 9)
 plt.scatter(x=1,y=mean_leu[-1], marker=4, color='black',
                 s=180, label = 'EOS', zorder=3)
 plt.tight_layout()
-plt.savefig('./Figure/response_I2ADT_IADT_comparision.eps', dpi=500, bbox_inches='tight')
+plt.savefig('./Figure/resistance_I2ADT_IADT_comparision.eps', dpi=500, bbox_inches='tight')
 plt.show()

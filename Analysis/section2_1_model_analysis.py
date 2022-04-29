@@ -1,18 +1,10 @@
 import os
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.lines import Line2D
-from matplotlib import markers
 import seaborn as sns
 from sklearn.metrics import r2_score, roc_curve, auc
 from _utils import *
-from LoadData import LoadData
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import normalize
-import random
+from scipy.stats import sem, t
 
 patientList = [1, 2, 3, 4, 6, 11, 12, 13, 15, 16, 17, 19, 20, 24, 25, 29, 30, 31, 32, 36, 37, 40, 42, 44, 46, 50, 51,
                52, 54, 58, 60, 61, 62, 63, 66, 71, 75, 77, 78, 79, 84, 85, 86, 87, 88, 91, 92, 93, 94, 95, 96, 97,
@@ -113,13 +105,44 @@ plt.savefig('../Experts_Analysis/ResIndex_distribution.eps', dpi=300 , bbox_inch
 plt.show()
 plt.close()
 
-# type_arr = np.array([2 if i in patient_yes else 1 for i in patientList ])
-# finalDay = np.array(finalDay_list)
-# CompetitionIndex = type_arr / (1 + np.exp(- mean_res_index * finalDay / 28 / 12))
-# plt.figure(figsize=(5, 4))
-# sns.boxplot(CompetitionIndex)
-# plt.tight_layout()
-# plt.show()
+mean_res_index = []
+mean_pars = []
+for i in patientList:
+    if len(str(i)) == 1:
+        patientNo = "patient00" + str(i)
+    elif len(str(i)) == 2:
+        patientNo = "patient0" + str(i)
+    else:
+        patientNo = "patient" + str(i)
+    pars_arr = ALL_F_PARS_LIST[patientNo]
+    mean_res_index.append(pars_arr.mean(axis=0)[-2])
+    mean_pars.append(pars_arr.mean(axis=0))
+##################################
+############ Fig2.c ##############
+##################################
+# All pars distribution
+mean_pars = np.stack(mean_pars)
+mean_pars[:, -2] = - mean_pars[:, -2]
+pars_all = pd.DataFrame(mean_pars.flatten('F'), columns = ['pars'])
+items = ['r1', 'r2', 'beta1', 'beta2', 'phi', 'gamma', 'betac']
+pars_all['labels'] = np.array([[items[i]] * mean_pars.shape[0] for i in range(len(items))]).flatten()
+plt.style.use(['science', "nature"])
+plt.figure(figsize=(5, 2))
+sns.boxplot(x = 'labels', y = 'pars', data = pars_all, palette='Paired')
+locs, labels = plt.xticks()
+plt.xticks(ticks = locs, labels = ['$r_1$', '$r_2$', '$\\beta_1$', '$\\beta_2$', '$\\phi$', '$\\gamma$', '$\\beta_c$'], fontsize =12)
+plt.xlabel('')
+plt.yticks(fontsize =12)
+plt.ylabel('')
+plt.tight_layout()
+plt.savefig('./Figure/all_pars_distribution.eps', dpi=400, bbox_inches='tight')
+plt.show()
+
+
+
+##################################
+############ Fig2.d ##############
+##################################
 
 valdir = "../Data/model_validate"
 vallist = os.listdir(valdir)
@@ -150,7 +173,8 @@ plt.savefig('../Experts_Analysis/Validation_PSA.eps', dpi=300, bbox_inches='tigh
 plt.show()
 plt.close()
 
-from scipy.stats import sem, t
+
+
 ##### The distribution and confidence interval analysis for patient-specific parameters #####
 MEAN_PARS = {}
 LOW_CI = {}

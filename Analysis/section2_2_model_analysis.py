@@ -23,10 +23,7 @@ from sklearn.metrics import confusion_matrix
 
 patientlist = [1, 2, 3, 4, 6, 11, 12, 13, 15, 16, 17, 19, 20, 24, 25, 29, 30, 31, 32, 36, 37, 40, 42, 44, 46, 50, 51,
                52, 54, 58, 60, 61, 62, 63, 66, 71, 75, 77, 78, 79, 84, 85, 86, 87, 88, 91, 92, 93, 94, 95, 96, 97,
-               99, 100, 101, 102, 104, 105, 106, 108] # kick 56 83 out of analysis
-# patientlist = [1, 2, 3, 6, 11, 12, 15, 16, 17, 19, 20, 24, 25, 29, 30, 31, 32, 36, 37, 40, 42, 44, 51,
-#                52, 54, 58, 60, 61, 77, 78, 79, 84, 85, 86, 87, 88, 91, 93, 94, 95, 96, 97,
-#                 100, 102, 104, 105, 106, 108]
+               99, 100, 101, 102, 104, 105, 106, 108]
 patient_yes = [11, 12, 19, 25, 36, 52, 54, 85, 88, 99, 101]
 cs = sns.color_palette("Paired")
 parsdir = "../GLV/analysis-dual-sigmoid/model_pars/"
@@ -159,9 +156,9 @@ thres_list = []
 auc_list = []
 PRED_TPR = []
 
+##### Supplementary analysis of the model #######
 
 def classify(true_y, train_res):
-
     sp_sen = 0
     sp = 0
     sen = 0
@@ -239,39 +236,15 @@ print("Mean Specificity:{}; CI:({},{})".format(mean_sp, low_CI_sp, high_CI_sp))
 print("Mean Sensitivity:{}; CI:({},{})".format(mean_sen, low_CI_sen, high_CI_sen))
 print("Mean Score:{}; CI:({},{})".format(mean_score, low_CI_score, high_CI_score))
 
-#     rand_res_mat = np.stack(rand_res_list)
-#     resIndex = rand_res_mat.reshape(-1)
-#     resIndex_df = pd.DataFrame(resIndex, index=patientlist, columns=['resIndex'])
-#
-#     # CompetitionIndex = 1 / (1 + np.exp(- resIndex * FinalDay / 28 / 12))
-#     fpr, tpr, thresholds = roc_curve(ResIndexlabels, -resIndex, drop_intermediate=True)
-#     auc_score = auc(fpr, tpr)
-#     fpr_list.append(fpr)
-#     tpr_list.append(tpr)
-#     f = interpolate.interp1d(x=fpr, y=tpr, kind='nearest',
-#                              fill_value="extrapolate")
-#     pred_fpr = np.linspace(0, 1, 100)
-#     PRED_TPR.append(f(pred_fpr))
-#     plt.plot(fpr, tpr, c='grey')
-#     thres_list.append(thresholds)
-#     auc_list.append(auc_score)
-# plt.show()
-# predicted expect and calculate confidence interval
-# mean_pred_tpr = np.mean(np.stack(PRED_TPR), 0)
-# low_CI_bound, high_CI_bound = st.t.interval(0.9, mean_pred_tpr.shape[0] - 1,
-#                                             loc=mean_pred_tpr,
-#                                             scale=st.sem(np.stack(PRED_TPR)))
-# x = pred_fpr
-# y = mean_pred_tpr
-# plt.plot(x,y , lw=1.5, c=cs[1], ls='--',label="AUC = %0.2f" % np.mean(auc_list), zorder=3)
-# plt.fill_between(pred_fpr, low_CI_bound, high_CI_bound, color='black')
-# plt.show()
-
 
 ResIndexlabels = pd.DataFrame(np.concatenate((np.ones(len(patient_no)), np.zeros(len(patient_yes)))),
                               index=patient_no + patient_yes)
 ResIndexlabels = ResIndexlabels.sort_index()
+
 # Compare with the standard IADT classification ###
+##################################
+############ Fig3.c ##############
+##################################
 plt.style.use(['science', "nature"])
 plt.figure(figsize=(5, 4))
 
@@ -303,93 +276,6 @@ plt.savefig('./Figure/ROC_competition_index.eps', dpi=300, bbox_inches='tight')
 plt.show()
 
 
-##################################################################
-###################### K-means cluster ###########################
-###################################################################
-
-# FPR = []
-# THRESHOLDS = []
-# for i in range(len(patientlist)):
-#     tprs = tpr_list[i]
-#     fprs = fpr_list[i]
-#     thresholds = thres_list[i]
-#     slicing = np.where(tprs >= 0.8)[0]
-#     FPR.append(fprs[slicing[0]])
-#     THRESHOLDS.append(thresholds[slicing[0]])
-#
-# mean_FPR = np.mean(FPR)
-# mean_THRES = np.mean(THRESHOLDS)
-# FPR_CI = st.t.interval(0.95, 1, loc=mean_FPR, scale=st.sem(np.stack(FPR)))
-# THRES_CI = st.t.interval(0.95, 1, loc=mean_THRES, scale=st.sem(np.stack(THRESHOLDS)))
-#
-# Ai_growth_rate = []
-# Ad_growth_rate = []
-# for i in patientlist:
-#     if len(str(i)) == 1:
-#         patientNo = "patient00" + str(i)
-#     elif len(str(i)) == 2:
-#         patientNo = "patient0" + str(i)
-#     else:
-#         patientNo = "patient" + str(i)
-#     pars_arr = ALL_F_PARS_LIST[patientNo]
-#     Ai_growth_rate.append(pars_arr.mean(0)[1])
-#     Ad_growth_rate.append(pars_arr.mean(0)[0])
-# Ai_growth_rate = np.stack(Ai_growth_rate)
-# Ad_growth_rate = np.stack(Ad_growth_rate)
-#
-# ### Yes
-# train_yes = random.sample(patient_yes, int(len(patient_yes) * 0.7))
-# test_yes = list(set(patient_yes) - set(train_yes))
-# ### No
-# train_no = random.sample(patient_no, int(len(patient_no) * 0.7))
-# test_no = list(set(patient_no) - set(train_no))
-#
-# train = train_yes + train_no
-# train.sort()
-# test = test_yes + test_no
-# test.sort()
-#
-# #### K means clustering ####
-# data_for_kmeans = pd.DataFrame({'y': list(ResIndexlabels.loc[:, 0]),
-#                                 'rHD': list(Ad_growth_rate),
-#                                 'rHI': list(Ai_growth_rate),
-#                                 'Gamma': list(-mean_res_index)}, index=ResIndexlabels.index)
-# normalized_x, norm = normalize(data_for_kmeans[['rHD', 'rHI', 'Gamma']], axis = 0,return_norm=True, norm="l2")
-# normalized_data_for_kmeans = pd.DataFrame({'y': list(ResIndexlabels.loc[:, 0]),
-#                                            'rHD': normalized_x[:, 0],
-#                                            'rHI': normalized_x[:, 1],
-#                                            'Gamma': normalized_x[:, 2]}, index=ResIndexlabels.index)
-# train_data = normalized_data_for_kmeans.loc[train]
-# test_data = normalized_data_for_kmeans.loc[test]
-#
-# #### K means clustering ####
-# k_num = 2
-# kmeans = KMeans(n_clusters=k_num).fit(normalized_data_for_kmeans[['rHD', 'rHI', 'Gamma']])
-# centroids = kmeans.cluster_centers_
-# cen_x = [i[0] for i in centroids]
-# cen_y = [i[1] for i in centroids]
-# cen_z = [i[2] for i in centroids]
-# normalized_data_for_kmeans['cluster'] = kmeans.predict(normalized_data_for_kmeans[['rHD', 'rHI', 'Gamma']])
-# normalized_data_for_kmeans['cen_x'] = normalized_data_for_kmeans.cluster.map({i: cen_x[i] for i in range(k_num)})
-# normalized_data_for_kmeans['cen_y'] = normalized_data_for_kmeans.cluster.map({i: cen_y[i] for i in range(k_num)})
-# normalized_data_for_kmeans['cen_z'] = normalized_data_for_kmeans.cluster.map({i: cen_z[i] for i in range(k_num)})
-#
-# normalized_data_for_kmeans.loc[11, 'cluster'] = 0
-# normalized_data_for_kmeans.loc[102, 'cluster'] = 0
-# normalized_data_for_kmeans.loc[83, 'cluster'] = 1
-#
-
-# symbols = ['circle' for _ in range(k_num)]
-# normalized_data_for_kmeans['c'] = normalized_data_for_kmeans.cluster.map({i: colors[i] for i in range(k_num)})
-# normalized_data_for_kmeans['symbol'] = normalized_data_for_kmeans.cluster.map({i: symbols[i] for i in range(k_num)})
-# original_cents = centroids * norm
-
-# chosen_patients_list = [85, 13, 88, 15 ,66, 61]
-# unchosen_patients_list = list(set(patientlist) - set(chosen_patients_list))
-# unchosen_patients_list.sort()
-# resistance = list(normalized_data_for_kmeans.loc[normalized_data_for_kmeans['cluster'] == 1].index)
-# response = list(normalized_data_for_kmeans.loc[normalized_data_for_kmeans['cluster'] == 0].index)
-#
 response = patient_no
 resistance = patient_yes
 colors = [cs[2*i+1] for i in range(2)]
@@ -400,41 +286,6 @@ all_patients_pars_mean_df = pd.DataFrame(np.concatenate((all_patients_pars_mean_
                                          columns=['r1', 'r2', 'beta1', 'beta2', 'phi', 'gamma', 'betac', 'labels'])
 all_patients_pars_mean_df['c'] = all_patients_pars_mean_df.labels.map({i: colors[i] for i in range(2)})
 all_patients_pars_mean_df['s'] = all_patients_pars_mean_df.labels.map({i: symbols[i] for i in range(2)})
-
-
-# fig = go.Figure()
-# fig.add_trace(go.Scatter3d(x =all_patients_pars_mean_df.loc[resistance].r1,
-#                            y=all_patients_pars_mean_df.loc[resistance].r2,
-#                            z=all_patients_pars_mean_df.loc[resistance].gamma,
-#                            mode='markers',
-#                            marker=dict(
-#                                symbol=all_patients_pars_mean_df.loc[resistance].s,
-#                                size=8,
-#                                color=all_patients_pars_mean_df.loc[resistance].c,
-#                                opacity=0.8
-#                            ),
-#                             name ='RST'
-#                            ))
-# # fig.update_traces(marker_symbol=normalized_data_for_kmeans.loc[unchosen_patients_list].cluster)
-# # fig.update_traces(marker_color=normalized_data_for_kmeans.loc[unchosen_patients_list].c)
-# fig.add_trace(go.Scatter3d(x =all_patients_pars_mean_df.loc[response].r1,
-#                            y=all_patients_pars_mean_df.loc[response].r2,
-#                            z=all_patients_pars_mean_df.loc[response].gamma,
-#                            mode='markers',
-#                            marker=dict(
-#                                symbol=all_patients_pars_mean_df.loc[response].s,
-#                                 size=8,
-#                                 color=all_patients_pars_mean_df.loc[response].c,
-#                                 opacity=1
-#                                 ),
-#                            name ='RSP'
-#                            ))
-#
-# fig.update_scenes(yaxis_title=dict(text="Growth Rate of RST"))
-# fig.update_scenes(zaxis_title=dict(text="γ"))
-# fig.update_scenes(xaxis_title=dict(text="Growth Rate of RSP"))
-# fig.write_html('./Figure/3d_figure.html', auto_open=True)
-
 
 
 fig = plt.figure(figsize=(5, 4))
@@ -458,6 +309,10 @@ plt.show()
 
 # data_for_kmeans['cluster'] = normalized_data_for_kmeans['cluster']
 # data_for_kmeans.to_csv("./kmeans_clustering_results.csv")
+
+##################################
+############ Fig3.a ##############
+##################################
 plt.figure(figsize=(5, 4))
 sns.swarmplot(x = 'labels', y='gamma',data =all_patients_pars_mean_df ,palette=[colorAlpha_to_rgb(cs[3], 0.6)[0], colorAlpha_to_rgb(cs[1], 0.6)[0]], size=8, orient='v')
 plt.hlines(all_patients_pars_mean_df.loc[response, 'gamma'].mean(),  0.75, 1.25, colors=cs[1], lw=5, ls='--', zorder=3)
@@ -530,7 +385,11 @@ ranksums(x = all_patients_pars_mean_df.loc[resistance, 'gamma'], y = all_patient
 ranksums(x = all_patients_pars_mean_df.loc[resistance, 'r1'], y = all_patients_pars_mean_df.loc[response, 'r1'])
 ranksums(x = all_patients_pars_mean_df.loc[resistance, 'r2'], y = all_patients_pars_mean_df.loc[response, 'r2'])
 
-##  A21 trends ##
+
+##################################
+############ Fig3.b ##############
+##################################
+##  A21 trends #
 X = np.arange(0, 120*28).reshape(-1)
 
 A21_dict = {}
@@ -591,41 +450,6 @@ plt.legend(fontsize=18)
 plt.tight_layout()
 plt.savefig('./Figure/A21_changes.eps', dpi=300, bbox_inches = 'tight')
 plt.show()
-# competition intensity analysis #
-C2_E = []
-#
-# for i in data_for_kmeans.index:
-#     if len(str(i)) == 1:
-#         patientNo = "patient00" + str(i)
-#     elif len(str(i)) == 2:
-#         patientNo = "patient0" + str(i)
-#     else:
-#         patientNo = "patient" + str(i)
-#     print(patientNo)
-#     parslist = os.listdir(parsdir + patientNo)
-#     clinical_data = pd.read_csv("../Data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
-#     Days = np.array(clinical_data.loc[:, 9].diff()[1:])
-#     X = Days[-1]
-#     PARS_LIST = []
-#     for arg in parslist:
-#         pars_df = pd.read_csv(parsdir + patientNo + '/' + arg)
-#         A, K, _, pars, best_pars = [np.array(pars_df.loc[i, ~np.isnan(pars_df.loc[i, :])]) for i in range(5)]
-#         PARS_LIST.append(best_pars)
-#     PARS_ARR = np.stack(PARS_LIST)
-#     pars = np.mean(PARS_ARR, axis=0)
-#     phi, gamma = pars[-4:-2]
-#     a21 = 1 / (1 + np.exp(-gamma * X / 12 / 28))
-#     experts_states = pd.read_csv('../Experts_states/analysis/' + patientNo + '_experts_states.csv', index_col=0)
-#
-#     c2_e = (experts_states.ad[X] * (1 / (1 + np.exp(-gamma * X / 12 / 28)).reshape(-1)) / K[1]) ** phi
-#     C2_E.append(c2_e)
-# data_for_kmeans['c2'] = C2_E
-#
-# fig = plt.figure(figsize=(10, 8))
-# sns.swarmplot(x='cluster', y='c2', data =data_for_kmeans ,palette=[cs[1], cs[3]], size=10, orient='v',alpha=0.6)
-# plt.show()
-
-
 
 
 

@@ -1,22 +1,21 @@
-import os
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import scipy.stats as st
 from _utils import *
 from scipy.stats import ttest_rel
+
+##################################################
+############## Analysis of TTP ###################
+############### Fig 5/7 b & c ####################
+##################################################
+
 parsdir = "../GLV/analysis-dual-sigmoid/model_pars/"
 cs = sns.color_palette('Paired')
-# resistance #
 X = np.arange(0, 120*28).reshape(-1)
-# clustering = pd.read_csv('./kmeans_clustering_results.csv', names=['y', 'r_HD', 'r_HI', 'Gamma', 'cluster', 'c2'], header = 0, index_col=0)
-# resistance, response = clustering[clustering.cluster == 1], clustering[clustering.cluster == 0]
 resistance = [11, 12, 19, 25, 36, 52, 54, 85, 88, 99, 101]
 response = [1, 2, 3, 4, 6, 13, 15, 16, 17, 20, 24, 29, 30, 31, 32, 37, 40, 42, 44, 46, 50, 51,
             58, 60, 61, 62, 63, 66, 71, 75, 77, 78, 79, 84, 86, 87, 91, 92, 93, 94, 95, 96, 97,
             100, 102, 104, 105, 106, 108]
-patient051 = []
 for R in ['resistance', 'response']:
     A21 = []
     C2_P = []
@@ -48,10 +47,6 @@ for R in ['resistance', 'response']:
         max_states = pd.read_csv('../MAX_states/analysis/' + patientNo + '_evolution_states.csv', index_col=0)
         x_m = np.array(max_states.index).reshape(-1)
         X_M.append(min(x_m[-1].item(), 3416))
-        if patientNo == 'patient029':
-            patient029= [x_p[-1], x_e[-1], x_m[-1]]
-        if patientNo == 'patient036':
-            patient099 = [x_p[-1], x_e[-1], x_m[-1]]
 
 
     max_x_p = max(X_P)
@@ -99,14 +94,6 @@ for R in ['resistance', 'response']:
     plt.hlines(np.mean(X_P)/28, -0.25, .25, colors=cs[1], lw=3)
     plt.hlines(np.mean(X_E)/28, 0.75, 1.25, colors=cs[3], lw=3)
     plt.hlines(np.mean(X_M)/28, 1.75, 2.25, colors=cs[7], lw=3)
-    # if R=='resistance':
-    #     plt.scatter(0, patient099[0]/28, s=120, marker='*', color='black', zorder=3)
-    #     plt.scatter(1, patient099[1]/28, s=120, marker='*', color='black', zorder=3)
-    #     plt.scatter(2, patient099[2]/28, s=120, marker='*', color='black', zorder=3)
-    # else:
-    #     plt.scatter(0, patient029[0] / 28, s=120, marker='*', color='black', zorder=3)
-    #     plt.scatter(1, patient029[1] / 28, s=120, marker='*', color='black', zorder=3)
-    #     plt.scatter(2, patient029[2] / 28, s=120, marker='*', color='black', zorder=3)
     plt.tight_layout()
     plt.savefig('./Figure/' + R + "_TTP_distribution.eps", dpi=300)
     plt.show()

@@ -6,6 +6,11 @@ import seaborn as sns
 import scipy.stats as st
 from _utils import *
 
+####################################################################
+############## Analysis of competition intensity ###################
+##################### Fig 5/7 a ####################################
+####################################################################
+
 parsdir = "../GLV/analysis-dual-sigmoid/model_pars/"
 patientNo = 'patient036'
 parslist = os.listdir(parsdir + patientNo)
@@ -16,9 +21,9 @@ for arg in parslist:
     PARS_LIST.append(best_pars)
 PARS_ARR = np.stack(PARS_LIST)
 pars = np.mean(PARS_ARR, axis=0)
-phi99, gamma99 = pars[-3:-1]
+phi36, gamma36 = pars[-3:-1]
 
-patientNo = 'patient029'
+patientNo = 'patient106'
 parslist = os.listdir(parsdir + patientNo)
 PARS_LIST=[]
 for arg in parslist:
@@ -27,7 +32,7 @@ for arg in parslist:
     PARS_LIST.append(best_pars)
 PARS_ARR = np.stack(PARS_LIST)
 pars = np.mean(PARS_ARR, axis=0)
-phi29, gamma29 = pars[-3:-1]
+phi106, gamma106 = pars[-3:-1]
 cs = sns.color_palette('Paired')
 # resistance #
 X = np.arange(0, 120*28).reshape(-1)
@@ -85,20 +90,20 @@ for R in ['resistance', 'response']:
         X_M.append(x_m[-1].item())
         c2_m = (max_states.ad * (t / (1 + np.exp(-gamma * x_m / 12 / 28)).reshape(-1)) / K[1]) ** phi
         C2_M.append(c2_m)
-        if patientNo=='patient029':
-            xe_29 = x_e
-            c2_e_29 = c2_e
-            xp_29 = x_p
-            c2_p_29 = c2_p
-            xm_29 = x_m
-            c2_m_29 = c2_m
         if patientNo=='patient036':
-            xe_99=x_e
-            c2_e_99 = c2_e
-            xp_99 = x_p
-            c2_p_99 = c2_p
-            xm_99 = x_m
-            c2_m_99 = c2_m
+            xe_36 = x_e
+            c2_e_36 = c2_e
+            xp_36 = x_p
+            c2_p_36 = c2_p
+            xm_36 = x_m
+            c2_m_36 = c2_m
+        if patientNo=='patient106':
+            xe_106=x_e
+            c2_e_106 = c2_e
+            xp_106 = x_p
+            c2_p_106 = c2_p
+            xm_106 = x_m
+            c2_m_106 = c2_m
 
     max_x_p = max(X_P)
     max_x_e = max(X_E)
@@ -129,8 +134,8 @@ for R in ['resistance', 'response']:
     low_a21_bound, high_a21_bound = st.t.interval(0.95, mean_A21.shape[0] - 1, loc=mean_A21, scale=sd_A21)
     low_a21_bound[0] = 0.5
     high_a21_bound[0] = 0.5
-    a21_99 = 1 / (1 + np.exp(-gamma99 * X/12/28))
-    a21_29 = 1 / (1 + np.exp(-gamma29 * X/12/28))
+    a21_36 = 1 / (1 + np.exp(-gamma36 * X/12/28))
+    a21_106 = 1 / (1 + np.exp(-gamma106 * X/12/28))
 
 
     plt.style.use(["science", "nature"])
@@ -139,20 +144,20 @@ for R in ['resistance', 'response']:
     # ax1.plot(X, mean_A21, lw=1.4, c=cs[1])
     # plt.fill_between(X, low_a21_bound, high_a21_bound, color=colorAlpha_to_rgb(cs[1], 0.3)[0], label='95\% CI')
     if R == 'resistance':
-        ax1.plot(xp_99, c2_p_99, lw=1.4, c=cs[1], label='$I^2$ADT')
-        plt.scatter(x =xp_99[-1] , y= c2_p_99[xp_99[-1]],marker=4, color='black',s=100, zorder=3)
-        ax1.plot(xe_99, c2_e_99, lw=1.4, c=cs[3], label='IADT')
-        plt.scatter(x=xe_99[-1], y=c2_e_99[xe_99[-1]], marker='X', color='black', s=100, zorder=3)
-        ax1.plot(xm_99, c2_m_99, lw=1.4, c=cs[7], label='ADT')
-        plt.scatter(x=xm_99[-1], y=c2_m_99[xm_99[-1]], marker=4, color='black', s=100, zorder=3)
+        ax1.plot(xp_36, c2_p_36, lw=1.4, c=cs[1], label='$I^2$ADT')
+        plt.scatter(x =xp_36[-1] , y= c2_p_36[xp_36[-1]],marker=4, color='black',s=100, zorder=3)
+        ax1.plot(xe_36, c2_e_36, lw=1.4, c=cs[3], label='IADT')
+        plt.scatter(x=xe_36[-1], y=c2_e_36[xe_36[-1]], marker='X', color='black', s=100, zorder=3)
+        ax1.plot(xm_36, c2_m_36, lw=1.4, c=cs[7], label='ADT')
+        plt.scatter(x=xm_36[-1], y=c2_m_36[xm_36[-1]], marker=4, color='black', s=100, zorder=3)
         plt.yticks([0,1,2],[0, 1, 2],fontsize=20)
     else:
-        ax1.plot(xp_29, c2_p_29, lw=1.4, c=cs[1], label='$I^2$ADT')
-        plt.scatter(x=xp_29[-1], y=c2_p_29[xp_29[-1]], marker=4, color='black', s=100, zorder=3)
-        ax1.plot(xe_29, c2_e_29, lw=1.4, c=cs[3], label='IADT')
-        plt.scatter(x=xe_29[-1], y=c2_e_29[xe_29[-1]], marker='X', color='black', s=100, zorder=3)
-        ax1.plot(xm_29, c2_m_29, lw=1.4, c=cs[7],  label='ADT')
-        plt.scatter(x=xm_29[-1], y=c2_m_29[xm_29[-1]], marker=4, color='black', s=100, zorder=3)
+        ax1.plot(xp_106, c2_p_106, lw=1.4, c=cs[1], label='$I^2$ADT')
+        plt.scatter(x=xp_106[-1], y=c2_p_106[xp_106[-1]], marker=4, color='black', s=100, zorder=3)
+        ax1.plot(xe_106, c2_e_106, lw=1.4, c=cs[3], label='IADT')
+        plt.scatter(x=xe_106[-1], y=c2_e_106[xe_106[-1]], marker='X', color='black', s=100, zorder=3)
+        ax1.plot(xm_106, c2_m_106, lw=1.4, c=cs[7],  label='ADT')
+        plt.scatter(x=xm_106[-1], y=c2_m_106[xm_106[-1]], marker=4, color='black', s=100, zorder=3)
         plt.yticks([0, 1, 2], [0,1, 2], fontsize=20)
     plt.xticks(ticks=[], labels=[], fontsize = 20)
     plt.ylabel('', fontsize=2)
