@@ -1,0 +1,7 @@
+nohup: ignoring input
+============================================================================================
+Remove CancerControl-v0 from registry
+Traceback (most recent call last):
+  File "train.py", line 566, in <module>
+    if name.endswith('.csv'):
+NameError: name 'name' is not defined

@@ -543,10 +543,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     ending_states = ending_states_all_patients.loc[args.number]
     args.m2_ad, args.m2_ai, args.ad_end_c, args.sl = ending_states.m_ad, ending_states.m_ai, ending_states.c_ad, ending_states.sl
-    if args.number == 32:
-        args.m2_ad = 1.
-    if args.number in [11, 12, 19, 25, 36, 54, 85, 88, 99, 101]: # 52 type = 1
-        args.type = 2.
+    # if args.number == 32:
+    #     args.m2_ad = 1.
+    # if args.number in [11, 12, 19, 25, 36, 54, 85, 88, 99, 101]: # 52 type = 1
+    #     args.type = 2.
     if len(str(args.number)) == 1:
         patientNo = "patient00" + str(args.number)
     elif len(str(args.number)) == 2:
@@ -563,9 +563,11 @@ if __name__ == '__main__':
     PARS_LIST = []
     # reading the ode parameters and the initial/terminal states
     for arg in parslist:
-        pars_df = pd.read_csv(parsdir + patientNo + '/' + arg)
-        _, K, states, pars, best_pars = [np.array(pars_df.loc[i, ~np.isnan(pars_df.loc[i, :])]) for i in range(5)]
-        PARS_LIST.append(best_pars)
+        if arg.endswith('.csv'):
+            print(arg)
+            pars_df = pd.read_csv(parsdir + patientNo + '/' + arg)
+            K, states, pars, best_pars = [np.array(pars_df.loc[i, ~np.isnan(pars_df.loc[i, :])]) for i in range(4)]
+            PARS_LIST.append(best_pars)
     # Init = np.array([mean_v / Mean_psa * true_psa[0] / cell_size, 1e-4 * K[1], true_psa[0]])
     Init_states = states[:3]
     PARS_ARR = np.stack(PARS_LIST)
