@@ -1,19 +1,19 @@
-# hash:sha256:0b6bb816938891e68c6f14821c0546d0a33bb1b4435c3e561d6f5d6f8f0d403d
+# hash:sha256:e417275629fad5fa1303ebed6c7125e535c5b3750dc80963ebd174f293588f33
 FROM registry.codeocean.com/codeocean/miniconda3:4.9.2-cuda11.7.0-cudnn8-ubuntu20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN conda install -y \
-        matplotlib \
-        numpy \
-        pandas \
-        scipy \
-        seaborn \
+        matplotlib==3.5.1 \
+        numpy==1.21.5 \
+        pandas==1.4.2 \
+        scipy==1.7.3 \
+        seaborn==0.11.2 \
     && conda clean -ya
 
 RUN pip install -U --no-cache-dir \
     gym==0.21.0 \
-    xitorch
+    xitorch==0.3.0
 
 COPY postInstall /
 RUN /postInstall
