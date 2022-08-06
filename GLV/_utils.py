@@ -71,7 +71,7 @@ def clip_grad(grad, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
 
 def plot_evolution(Days, PSA, prediction, patientNo, patient_t):
     x = np.arange(prediction.shape[0])
-    p, ad, ai = prediction[:, 0], prediction[:, 1], prediction[:, 2]
+    ad, ai, p = prediction[:, 0], prediction[:, 1], prediction[:, 2]
     plt.scatter(Days, PSA, color="black", marker="*", alpha=0.6)
     plt.plot(x, p, color="black", linestyle="-", linewidth=1)
     plt.xlabel("Time (Days)")
