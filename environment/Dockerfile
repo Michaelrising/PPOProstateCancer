@@ -1,14 +1,14 @@
-# hash:sha256:f11b75a4f46810a71df7266dce1485d9a728a3edca4230f2342a822eb99b729f
+# hash:sha256:d42d084cddb08d1ae62675a66014220a0b54145dba3d1eb18a99777d2bef97db
 FROM registry.codeocean.com/codeocean/miniconda3:4.9.2-cuda11.7.0-cudnn8-ubuntu20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        cm-super \
-        dvipng \
-        texlive-fonts-recommended \
-        texlive-latex-extra \
+        cm-super=0.3.4-15 \
+        dvipng=1.15-1.1 \
+        texlive-fonts-recommended=2019.20200218-1 \
+        texlive-latex-extra=2019.202000218-1 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN conda install -y \

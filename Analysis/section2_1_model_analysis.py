@@ -103,7 +103,7 @@ for patch in ax.artists:
     r, g, b, a = patch.get_facecolor()
     patch.set_facecolor(colorAlpha_to_rgb((r, g, b), .3)[0])
 plt.tight_layout()
-# plt.savefig('../Experts_Analysis/ResIndex_distribution.eps', dpi=300 , bbox_inches = 'tight')
+plt.savefig('../Experts_Analysis/ResIndex_distribution_1.eps', dpi=300 , bbox_inches = 'tight')
 plt.show()
 plt.close()
 
