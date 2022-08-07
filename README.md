@@ -9,11 +9,14 @@ Update 6-Aug-2022: Code Ocean Set Up
 ### I. Patients tM-GLV model
 1.1 run file ./GLV/glv_train_cpu.py with two parameters: n/t; 'n' denotes the patient number; and 't' is setting for randomized training of model. In our paper, we trained model 10 times with randomized samples for patient001. The scripts is: for \\$i in \{1..10\}; do python -u ./GLV/glv_train_cpu.py -n 1 --t \\$i > ./GLV/analysis-sigmoid/analysis_sigmoid_1_\\$i.log 2>\&1 \&  done
  1.2 After all patients' models are learned we can go to next step learn the RL strategies
+
  ** Note 1 that the training time for each patient is quite long, ranging from few hours to few days, which depends on the initial values and leraning rate. In our training we set is uniformly for all the patients. This parts can be obtained in our paper. ** 
 
 ### II. PPO
  2.1 run file ./train.py for patient001 as: do nohup python -u train.py -n 1  > ./PPO_logs/gym_cancer:CancerControl-v0/train1.log 2>&1 & 
+
 ** Note 2 that the runing time for PPO is ranging from 1 to few hours. **
+
 ** Note 3 Due to the computational-comsuming runing time, we have already collected good outputs for each patiants saved in location: ./PPO_protrained/analysis. And can just use them to reproduce all of the results. If you wanna reproduce your own results, pls note that the path needed to be changed to desired trained model.**
  ### III. Analysis
  #### III.1 Generating plots of evolution dynamics 
