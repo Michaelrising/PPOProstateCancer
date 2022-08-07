@@ -116,7 +116,7 @@ def plot_figure(data, save_path,patientNo, par = 0):
     ax2.set_zorder(2)
     ax2.tick_params(axis="y", labelsize=15)
     # read clinical dosages into the plot
-    clinical_data = pd.read_csv("./Data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
+    clinical_data = pd.read_csv("../Data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
     cpa = np.array(clinical_data[2])
     cpa[np.isnan(cpa)] = 0
     leu = np.array(clinical_data[3])
@@ -267,12 +267,12 @@ def test(args, file, t):
     ppo_agent.load(checkpoint_path)
 
     print("--------------------------------------------------------------------------------------------")
-    if not os.path.exists("./PPO_figs/analysis/"):
-        os.makedirs("./PPO_figs/analysis/")
-    if not os.path.exists("./PPO_policy/analysis/"):
-        os.makedirs("./PPO_policy/analysis/")
-    if not os.path.exists("./PPO_states/analysis/"):
-        os.makedirs("./PPO_states/analysis/")
+    if not os.path.exists("../PPO_figs/analysis/"):
+        os.makedirs("../PPO_figs/analysis/")
+    if not os.path.exists("../PPO_policy/analysis/"):
+        os.makedirs("../PPO_policy/analysis/")
+    if not os.path.exists("../PPO_states/analysis/"):
+        os.makedirs("../PPO_states/analysis/")
     record_states_high_reward = 0
     record_dose_high_reward = 0
     record_states_high_survival_time = 0
@@ -301,10 +301,10 @@ def test(args, file, t):
                 break
         if ep==1:
             evolution_ = np.concatenate(evolution, axis=1).T
-            pd.DataFrame(evolution_, columns=['ad', 'ai', 'psa']).to_csv("./PPO_states/analysis/" + patientNo + "_evolution_states.csv")
+            pd.DataFrame(evolution_, columns=['ad', 'ai', 'psa']).to_csv("../PPO_states/analysis/" + patientNo + "_evolution_states.csv")
             doses_ = np.stack(doses)
             pd.DataFrame(doses_, columns=["CPA", "LEU"]).to_csv(
-                "./PPO_policy/analysis/" + patientNo + "_rl_dosages.csv")
+                "../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv")
         if record_reward < ep_reward:
             record_reward = ep_reward
             record_states_high_reward = np.vstack(states.copy())
@@ -323,14 +323,14 @@ def test(args, file, t):
     High_reward = {"states": record_states_high_reward, "doses": record_dose_high_reward}
     High_survival = {"states": record_states_high_survival_time, "doses": record_dose_survival_month}
 
-    savepath = "./PPO_figs/analysis/" +patientNo
+    savepath = "../PPO_figs/analysis/" +patientNo
     plot_figure(High_reward, savepath ,patientNo, 0)
     # plot_figure(High_survival, savepath, 1)
     # # pd.DataFrame(record_states_high_reward).to_csv(
     # #     "./PPO_states/analysis/" + patientNo + "_converge_high_reward_states.csv")
     # # pd.DataFrame(record_states_high_survival_time).to_csv(
     # #     "./PPO_states/analysis/" + patientNo + "_converge_high_survival_states.csv")
-    pd.DataFrame(record_dose_high_reward).to_csv("./PPO_policy/analysis/" + patientNo + "_rl_dosages.csv")
+    pd.DataFrame(record_dose_high_reward).to_csv("../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv")
     # pd.DataFrame(record_dose_survival_month).to_csv("./PPO_policy/analysis/" + patientNo + "_converge_high_survival_dosages.csv")
     print("============================================================================================")
 
@@ -345,7 +345,7 @@ if __name__ == '__main__':
 
     print("============================================================================================")
 
-    parsdir = "./GLV/analysis-dual-sigmoid/model_pars/"
+    parsdir = "../GLV/analysis-dual-sigmoid/model_pars/"
     env_dict = gym.envs.registration.registry.env_specs.copy()
     for env in env_dict:
         if 'CancerControl-v0' in env:
@@ -388,7 +388,7 @@ if __name__ == '__main__':
     type = ['response', 'resistance']
     AVA_REWARD = {}
     for t in type:
-        analysis = os.listdir('./PPO_pretrained/analysis/' + t)
+        analysis = os.listdir('../PPO_pretrained/analysis/' + t)
         analysis.sort()
         for file in analysis:
             Number = int(file[7:10])
@@ -402,7 +402,7 @@ if __name__ == '__main__':
             ending_states = ending_states_all_patients.loc[args.number]
             args.m2_ad, args.m2_ai, args.ad_end_c, args.sl = ending_states.m_ad, ending_states.m_ai, ending_states.c_ad, ending_states.sl
             parslist = os.listdir(parsdir + patientNo)
-            clinical_data = pd.read_csv("./Data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
+            clinical_data = pd.read_csv("../Data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
             true_psa = np.array(clinical_data.loc[:, 4])
             true_psa = true_psa[~np.isnan(true_psa)]
             cell_size = 5.236e-10
@@ -421,7 +421,7 @@ if __name__ == '__main__':
 
             print("============================================================================================")
             print(Number)
-            model_loc = './PPO_pretrained/analysis/' + t +'/' +file
+            model_loc = '../PPO_pretrained/analysis/' + t +'/' +file
             reward = test(args, model_loc, t)
             AVA_REWARD[patientNo] = reward
 
