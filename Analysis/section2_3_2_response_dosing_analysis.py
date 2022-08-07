@@ -123,7 +123,9 @@ for l, patient in enumerate(response_all):
     else:
         CPA = [0, 50, 100, 150, 200]
         LEU = [0, 7.5]
-        extraDose = pd.read_csv("../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv")
+        try: 
+            extraDose = pd.read_csv("../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv")
+        except 
         left = Days[-1]
         extraDose = np.array(extraDose)[:, -1]
         for ii in range(extraDose.shape[0]):
