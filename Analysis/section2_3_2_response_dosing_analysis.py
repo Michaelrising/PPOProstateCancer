@@ -486,7 +486,11 @@ for l, patient in enumerate(response_all):
     # on_interval.append(Days[-1] - transition) if ONOFF[-1] == 1 else off_interval.append(Days[-1] - transition)
     # transition = Days[-1]
     if np.isnan(simu_stop.loc[patient].item()):
-        extraDose = np.array(pd.read_csv("../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv", index_col=0)).reshape(-1)
+        try: 
+            extraDose = np.array(pd.read_csv("../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv", index_col=0)).reshape(-1)
+        except FileNotFoundError:
+            print("There is NO prediction of "+patient+"!!")
+            continue
         if ONOFF[-1] ==0 and extraDose[0] == 0:
             for i in range(extraDose.shape[0] - 1):
                 if extraDose[i]==0 and extraDose[i + 1] != 0:
