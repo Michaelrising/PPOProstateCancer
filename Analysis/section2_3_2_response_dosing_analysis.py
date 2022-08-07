@@ -125,7 +125,8 @@ for l, patient in enumerate(response_all):
         LEU = [0, 7.5]
         try: 
             extraDose = pd.read_csv("../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv")
-        except 
+        except FileNotFoundError:
+            print("There is NO prediction of "+patient+"!!")
         left = Days[-1]
         extraDose = np.array(extraDose)[:, -1]
         for ii in range(extraDose.shape[0]):
