@@ -66,6 +66,8 @@ for l, patient in enumerate(resistance_all):
     leu_ppo = df_ppo_LEU.loc[patient, ~np.isnan(df_ppo_LEU.loc[patient])]
     for month, cpaData in enumerate(cpa_ppo):
         leuData = leu_ppo[month]
+        if cpaData > 1:
+            cpaData =  cpaData/200.
         if cpaData != 0:
             if leuData != 0:
                 barcontainer = ax1.barh(patient +'-p', 28, left=month * 28, color=onColor, alpha=cpaData, hatch="///",
