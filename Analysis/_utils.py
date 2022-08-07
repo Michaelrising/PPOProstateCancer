@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import os
 import pandas as pd
 import torch
-from env.gym_cancer.envs.cancercontrol import CancerControl
 # import pybullet_envs
 import seaborn as sns
 from PPO import PPO
@@ -15,7 +14,9 @@ from matplotlib.lines import Line2D
 import matplotlib
 import matplotlib.colors as mplc
 from matplotlib.colors import colorConverter as cC
-
+import sys
+sys.path.append("..")
+from env.gym_cancer.envs.cancercontrol import CancerControl
 
 class AnyObject:
     pass

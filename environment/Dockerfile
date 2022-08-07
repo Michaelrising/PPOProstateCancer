@@ -1,4 +1,4 @@
-# hash:sha256:2c2421217efa6dd6428185dfc377c1d9fd35195cc04831a5a6a04acbeb4ccf8f
+# hash:sha256:ab7af2bf2c9c6a19cbf61cfe6ba10fa5f81f4cb6fd44a7b1660be95b03b859ad
 FROM registry.codeocean.com/codeocean/miniconda3:4.9.2-cuda11.7.0-cudnn8-ubuntu20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -14,8 +14,8 @@ RUN conda install -y \
 
 RUN pip install -U --no-cache-dir \
     gym==0.21.0 \
-    plotly \
-    sklearn \
+    plotly==5.9.0 \
+    sklearn==0.0 \
     tensorboard==2.9.1 \
     xitorch==0.3.0
 
