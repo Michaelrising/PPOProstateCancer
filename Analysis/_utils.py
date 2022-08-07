@@ -6,8 +6,7 @@ import pandas as pd
 import torch
 # import pybullet_envs
 import seaborn as sns
-from PPO import PPO
-from brokenaxes import brokenaxes
+# from brokenaxes import brokenaxes
 from matplotlib.gridspec import GridSpec
 import matplotlib.patches as mpatches
 from matplotlib.lines import Line2D
@@ -17,6 +16,7 @@ from matplotlib.colors import colorConverter as cC
 import sys
 sys.path.append("..")
 from env.gym_cancer.envs.cancercontrol import CancerControl
+from PPO import PPO
 
 class AnyObject:
     pass

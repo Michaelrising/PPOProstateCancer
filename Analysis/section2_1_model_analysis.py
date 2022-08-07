@@ -5,6 +5,8 @@ import seaborn as sns
 from sklearn.metrics import r2_score, roc_curve, auc
 from _utils import *
 from scipy.stats import sem, t
+import sys
+sys.path.append(".")
 
 patientList = [1, 2, 3, 4, 6, 11, 12, 13, 15, 16, 17, 19, 20, 24, 25, 29, 30, 31, 32, 36, 37, 40, 42, 44, 46, 50, 51,
                52, 54, 58, 60, 61, 62, 63, 66, 71, 75, 77, 78, 79, 84, 85, 86, 87, 88, 91, 92, 93, 94, 95, 96, 97,
@@ -101,7 +103,7 @@ for patch in ax.artists:
     r, g, b, a = patch.get_facecolor()
     patch.set_facecolor(colorAlpha_to_rgb((r, g, b), .3)[0])
 plt.tight_layout()
-plt.savefig('../Experts_Analysis/ResIndex_distribution.eps', dpi=300 , bbox_inches = 'tight')
+# plt.savefig('../Experts_Analysis/ResIndex_distribution.eps', dpi=300 , bbox_inches = 'tight')
 plt.show()
 plt.close()
 
