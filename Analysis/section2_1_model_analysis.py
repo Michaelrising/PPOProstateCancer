@@ -82,9 +82,9 @@ mean_res_index = np.stack(mean_res_index)
 # Draw plots
 plt.style.use(['science', 'nature'])
 plt.figure(figsize=(5, 4))
-ax = sns.boxplot(-mean_res_index, color=cs[0], orient='v')
-sns.swarmplot(-np.stack(YesIndex), color=cs[1], size=5)
-sns.swarmplot(-np.stack(NoIndex), color=cs[3], size=5)
+ax = sns.boxplot(data=-mean_res_index, color=cs[0], orient='v')
+sns.swarmplot(data = -np.stack(YesIndex), color=cs[1], size=5)
+sns.swarmplot(data = -np.stack(NoIndex), color=cs[3], size=5)
 plt.scatter(x=-markIndex[1], y=0, color=cs[5], label='patient011', marker='*', s=150, zorder=3)
 plt.scatter(x=-markIndex[0], y=0, color=cs[7], label='patient006', marker='*', s=150, zorder=3)
 plt.scatter(x =-np.array(YesIndex), y =[0 for _ in range(len(YesIndex))], color='red' )
@@ -103,7 +103,7 @@ for patch in ax.artists:
     r, g, b, a = patch.get_facecolor()
     patch.set_facecolor(colorAlpha_to_rgb((r, g, b), .3)[0])
 plt.tight_layout()
-plt.savefig('../Experts_Analysis/ResIndex_distribution_1.eps', dpi=300 , bbox_inches = 'tight')
+plt.savefig('./Figure/ResIndex_distribution.eps', dpi=300 , bbox_inches = 'tight')
 plt.show()
 plt.close()
 
@@ -122,6 +122,7 @@ for i in patientList:
 ##################################
 ############ Fig2.c ##############
 ##################################
+print("Fig2.d is saved as: ./Figure/all_pars_distribution.eps")
 # All pars distribution
 mean_pars = np.stack(mean_pars)
 mean_pars[:, -2] = - mean_pars[:, -2]
@@ -145,7 +146,7 @@ plt.show()
 ##################################
 ############ Fig2.d ##############
 ##################################
-
+print("Fig2.d is saved as: ./Figure/Validation_PSA.eps")
 valdir = "../Data/model_validate"
 vallist = os.listdir(valdir)
 true_list = []
@@ -171,7 +172,7 @@ plt.yticks(labels=[0,10, 20, 30, 40], ticks=[0, 10, 20, 30 , 40],fontsize=20)
 plt.text(20, 10, f"$R^2 = $ {r2:<5.2f}", fontsize=22)
 plt.subplots_adjust(left=0.2, right=1, top=1, bottom=0.2)
 plt.tight_layout()
-plt.savefig('../Experts_Analysis/Validation_PSA.eps', dpi=300, bbox_inches='tight')
+plt.savefig('./Figure/Validation_PSA.eps', dpi=300, bbox_inches='tight')
 plt.show()
 plt.close()
 
