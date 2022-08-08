@@ -103,7 +103,7 @@ for patch in ax.artists:
     r, g, b, a = patch.get_facecolor()
     patch.set_facecolor(colorAlpha_to_rgb((r, g, b), .3)[0])
 plt.tight_layout()
-plt.savefig('../Analysis/Figure/ResIndex_distribution.eps', dpi=300 , bbox_inches = 'tight')
+plt.savefig('../../Analysis/Figure/ResIndex_distribution.eps', dpi=300 , bbox_inches = 'tight')
 plt.show()
 plt.close()
 
@@ -122,7 +122,7 @@ for i in patientList:
 ##################################
 ############ Fig2.c ##############
 ##################################
-print("Fig2.d is saved as: ../Analysis/Figure/all_pars_distribution.eps")
+print("Fig2.d is saved as: ../../Analysis/Figure/all_pars_distribution.eps")
 # All pars distribution
 mean_pars = np.stack(mean_pars)
 mean_pars[:, -2] = - mean_pars[:, -2]
@@ -138,7 +138,7 @@ plt.xlabel('')
 plt.yticks(fontsize =12)
 plt.ylabel('')
 plt.tight_layout()
-plt.savefig('../Analysis/Figure/all_pars_distribution.eps', dpi=400, bbox_inches='tight')
+plt.savefig('../../Analysis/Figure/all_pars_distribution.eps', dpi=400, bbox_inches='tight')
 plt.show()
 
 
@@ -146,7 +146,7 @@ plt.show()
 ##################################
 ############ Fig2.d ##############
 ##################################
-print("Fig2.d is saved as: ../Analysis/Figure/Validation_PSA.eps")
+print("Fig2.d is saved as: ../../Analysis/Figure/Validation_PSA.eps")
 valdir = "../data/model_validate"
 vallist = os.listdir(valdir)
 true_list = []
@@ -172,7 +172,7 @@ plt.yticks(labels=[0,10, 20, 30, 40], ticks=[0, 10, 20, 30 , 40],fontsize=20)
 plt.text(20, 10, f"$R^2 = $ {r2:<5.2f}", fontsize=22)
 plt.subplots_adjust(left=0.2, right=1, top=1, bottom=0.2)
 plt.tight_layout()
-plt.savefig('../Analysis/Figure/Validation_PSA.eps', dpi=300, bbox_inches='tight')
+plt.savefig('../../Analysis/Figure/Validation_PSA.eps', dpi=300, bbox_inches='tight')
 plt.show()
 plt.close()
 
@@ -206,7 +206,7 @@ pd.DataFrame.from_dict(HIGH_CI, orient='index', columns=['r0', 'r1', 'beta1', 'b
     '../Analysis/csv_file/pars_high_ci.csv')
 df_CI = pd.DataFrame.from_dict(CI, orient='index', columns=['r0', 'r1', 'beta1', 'beta2', 'phi', 'gamma', 'betac'])
 df_CI[['r0', 'r1', 'beta1', 'beta2']].to_csv('../Analysis/csv_file/pars_ci_14.csv', sep=';')
-df_CI[['phi', 'gamma', 'betac']].to_csv('../Analysis/csv_file/pars_ci_57.csv', sep=';')
+df_CI[['phi', 'gamma', 'betac']].to_csv('../../Analysis/csv_file/pars_ci_57.csv', sep=';')
 
 
 
