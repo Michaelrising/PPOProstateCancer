@@ -41,7 +41,7 @@ for i in all:
     # else:
     #     all_adaptive.append(patientNo)
     all_all.append(patientNo)
-    doseSeq = pd.read_csv("../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv", names = ["Month", "CPA", "LEU"], header=0)
+    doseSeq = pd.read_csv("../../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv", names = ["Month", "CPA", "LEU"], header=0)
     patientLables.append(patientNo)
     patientSurvivalTime.append(np.array(doseSeq).shape[0] * 28)
     doseSeq["CPA"] = doseSeq["CPA"]/200
@@ -125,7 +125,7 @@ for l, patient in enumerate(all_all):
     else:
         CPA = [0, 50, 100, 150, 200]
         LEU = [0, 7.5]
-        extraDose = pd.read_csv("../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv")
+        extraDose = pd.read_csv("../../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv")
         left = Days[-1]
         extraDose = np.array(extraDose)[:, -1]
         for ii in range(extraDose.shape[0]):
@@ -162,7 +162,7 @@ plt.legend([ a1, a2, a3, a4, s1, s2 ], ['C$\&$L-On',"Cpa-On ","Leu-On" ,'Treat-O
            handler_map={a1: AnyObjectHandler(color=onColor), a2:AnyObjectHandler(color=onCpa, _hatch=None),
                         a3: AnyObjectHandler(color=colorAlpha_to_rgb(cs[0], 0)[0], alpha = 1), a4: AnyObjectHandler(color=offColor,alpha=1, _hatch=None)}
            , fontsize =30, loc = 2, bbox_to_anchor=(-0.225, 0.7))
-plt.savefig("./Figure/All_patients_Strategy.pdf", dpi = 500)
+plt.savefig("../Analysis/Figure/All_patients_Strategy.pdf", dpi = 500)
 plt.show()
 plt.close()
 
@@ -177,7 +177,7 @@ for i in all:
     else:
         patientNo = "patient" + str(i)
     print(patientNo)
-    statesSeq = pd.read_csv("../PPO_states/analysis/" + patientNo +'_evolution_states.csv', names = ["AD", "AI", "PSA"], header=0)
+    statesSeq = pd.read_csv("../../PPO_states/analysis/" + patientNo +'_evolution_states.csv', names = ["AD", "AI", "PSA"], header=0)
     patientLables.append(patientNo)
     psa = statesSeq['PSA']
     diff1_psa = psa.diff()
@@ -302,7 +302,7 @@ for i in all:
     else:
         patientNo = "patient" + str(i)
     print(patientNo)
-    doseSeq = pd.read_csv("../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv", names = ["Month", "CPA", "LEU"], header=0)
+    doseSeq = pd.read_csv("../../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv", names = ["Month", "CPA", "LEU"], header=0)
     doseSeq["CPA"] = doseSeq["CPA"] / 200
     doseSeq["LEU"] = doseSeq["LEU"] / 7.5
     month = np.array(doseSeq['Month']).reshape(-1)
@@ -481,7 +481,7 @@ for l, patient in enumerate(all_all):
     # on_interval.append(Days[-1] - transition) if ONOFF[-1] == 1 else off_interval.append(Days[-1] - transition)
     # transition = Days[-1]
     if np.isnan(simu_stop.loc[patient].item()):
-        extraDose = np.array(pd.read_csv("../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv", index_col=0)).reshape(-1)
+        extraDose = np.array(pd.read_csv("../../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv", index_col=0)).reshape(-1)
         if ONOFF[-1] ==0 and extraDose[0] == 0:
             for i in range(extraDose.shape[0] - 1):
                 if extraDose[i]==0 and extraDose[i + 1] != 0:
@@ -588,5 +588,5 @@ plt.yticks(fontsize = 9)
 plt.scatter(x=1,y=mean_leu[-1], marker=4, color='black',
                 s=180, label = 'EOS', zorder=3)
 plt.tight_layout()
-plt.savefig('./Figure/all_I2ADT_IADT_comparision.eps', dpi=500, bbox_inches='tight')
+plt.savefig('../../Analysis/Figure/all_I2ADT_IADT_comparision.eps', dpi=500, bbox_inches='tight')
 plt.show()
