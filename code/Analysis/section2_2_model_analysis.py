@@ -87,7 +87,7 @@ plt.xlabel('')
 plt.yticks(fontsize =12)
 plt.ylabel('')
 plt.tight_layout()
-plt.savefig('../Analysis/Figure/all_pars_distribution.eps', dpi=400, bbox_inches='tight')
+plt.savefig('../../Analysis/Figure/all_pars_distribution.eps', dpi=400, bbox_inches='tight')
 plt.show()
 
 # the CI for all the paras for all the patients
@@ -134,7 +134,7 @@ legend_elements = [Line2D([0], [0], marker = symbols[i], color='w', label=legend
                           markerfacecolor=colorAlpha_to_rgb(mcolor, 0.6)[0], markersize=ms[i]) for i, mcolor in enumerate(colors)]
 plt.legend(handles = legend_elements, loc='upper right', ncol=1, fontsize = 18)
 plt.tight_layout()
-plt.savefig("../Analysis/Figure/r1_r2_distributions.eps", dpi=300, bbox_inches ='tight')
+plt.savefig("../../Analysis/Figure/r1_r2_distributions.eps", dpi=300, bbox_inches ='tight')
 plt.show()
 
 
@@ -272,7 +272,7 @@ plt.xticks(labels=[0,0.2,0.4,0.6,0.8, 1.0], ticks=[0, 0.2,0.4,0.6,0.8, 0.98], fo
 plt.yticks(labels=[0.2,0.4,0.6,0.8, 1.0], ticks=[0.2,0.4,0.6,0.8, 0.98],fontsize = 22)
 plt.subplots_adjust(left=0.2, right=1, top=1, bottom=0.2)
 plt.tight_layout()
-plt.savefig('../Analysis/Figure/ROC_competition_index.eps', dpi=300, bbox_inches='tight')
+plt.savefig('../../Analysis/Figure/ROC_competition_index.eps', dpi=300, bbox_inches='tight')
 plt.show()
 
 
@@ -302,7 +302,7 @@ legend_elements = [Line2D([0], [0], marker = 'o', color='w', label=legends[i],
                           markerfacecolor=colorAlpha_to_rgb(mcolor, 0.6)[0], markersize=10) for i, mcolor in enumerate(colors)]
 plt.legend(handles = legend_elements, loc='right', ncol=1, fontsize = 14.5)
 plt.tight_layout()
-plt.savefig("../Analysis/Figure/r2_gamma_distributions.eps", dpi=300, bbox_inches ='tight')
+plt.savefig("../../Analysis/Figure/r2_gamma_distributions.eps", dpi=300, bbox_inches ='tight')
 plt.show()
 
 
