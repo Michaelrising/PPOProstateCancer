@@ -17,7 +17,7 @@ all = [1, 2, 3, 4, 6, 11, 12, 13, 15, 16, 17,19, 20, 24, 25, 29, 30, 31, 32, 36,
             52, 54, 58, 60, 61, 62, 63, 66, 71, 75, 77, 78, 79, 84, 85, 86, 87, 88, 91, 92, 93, 94, 95, 96, 97, 99,
             100, 101, 102, 104, 105, 106, 108]
 all.sort()
-simulation_end_cinical = pd.read_csv("../Experts_policy/analysis/s_end_list.csv",names=['Days'],index_col=0, header=0)
+simulation_end_cinical = pd.read_csv("../../Experts_policy/analysis/s_end_list.csv",names=['Days'],index_col=0, header=0)
 parsdir = "../GLV/analysis-dual-sigmoid/model_pars/"
 patientLables = []
 patientCPA = []
@@ -98,7 +98,7 @@ plt.xlim(-10, 3600)
 
 ax2 = fig.add_subplot(1,2,2)
 for l, patient in enumerate(all_all):
-    clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patient + ".txt", header=None)
+    clinical_data = pd.read_csv("../../data/dataTanaka/Bruchovsky_et_al/" + patient + ".txt", header=None)
     ONOFF = np.array(clinical_data.loc[:, 7])
     drugOnDays = 0
     drugOffDays = 0
@@ -162,7 +162,7 @@ plt.legend([ a1, a2, a3, a4, s1, s2 ], ['C$\&$L-On',"Cpa-On ","Leu-On" ,'Treat-O
            handler_map={a1: AnyObjectHandler(color=onColor), a2:AnyObjectHandler(color=onCpa, _hatch=None),
                         a3: AnyObjectHandler(color=colorAlpha_to_rgb(cs[0], 0)[0], alpha = 1), a4: AnyObjectHandler(color=offColor,alpha=1, _hatch=None)}
            , fontsize =30, loc = 2, bbox_to_anchor=(-0.225, 0.7))
-plt.savefig("../Analysis/Figure/All_patients_Strategy.pdf", dpi = 500)
+plt.savefig("../../Analysis/Figure/All_patients_Strategy.pdf", dpi = 500)
 plt.show()
 plt.close()
 
@@ -215,7 +215,7 @@ cpa_clinical_daily = []
 leu_clinical_monthly = []
 clinical_onoff_freq = []
 for patient_i in df_ppo_drug.index:
-    clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patient_i + ".txt", header=None)
+    clinical_data = pd.read_csv("../../data/dataTanaka/Bruchovsky_et_al/" + patient_i + ".txt", header=None)
     onoff = np.array(clinical_data.loc[:, 7])
     Days = np.array(clinical_data.loc[:, 9].diff()[1:])
     Days = np.append(Days, 28)
@@ -445,7 +445,7 @@ cpa = np.array([0, 50, 100, 150, 200])/200
 leu = np.array([0, 7.5])/7.5
 _action_set = np.stack((np.tile(cpa, 2), np.sort(leu.repeat(5))), axis=1)
 for l, patient in enumerate(all_all):
-    clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patient + ".txt", header=None)
+    clinical_data = pd.read_csv("../../data/dataTanaka/Bruchovsky_et_al/" + patient + ".txt", header=None)
     ONOFF = np.array(clinical_data.loc[:, 7])
     Days = np.array(clinical_data.loc[:, 9]) - np.array(clinical_data.loc[0, 9])
     Days_diff = np.append(np.diff(Days), 28)
