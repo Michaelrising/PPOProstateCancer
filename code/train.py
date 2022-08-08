@@ -508,7 +508,7 @@ if __name__ == '__main__':
         if 'CancerControl-v0' in env:
             print("Remove {} from registry".format(env))
             del gym.envs.registration.registry.env_specs[env]
-    ending_states_all_patients = pd.read_csv('./Analysis/end_states_all_patients.csv', index_col=0)
+    ending_states_all_patients = pd.read_csv('../Analysis/end_states_all_patients.csv', index_col=0)
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, default=os.path.join('config', 'sacd.yaml'))
     parser.add_argument('--env_id', type=str, default='gym_cancer:CancerControl-v0')
