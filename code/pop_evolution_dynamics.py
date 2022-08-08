@@ -388,7 +388,9 @@ if __name__ == '__main__':
     type = ['response', 'resistance']
     AVA_REWARD = {}
     for t in type:
-        analysis = os.listdir('/PPO_pretrained/analysis/' + t)
+        ABSPATH=os.path.abspath(sys.argv[0])
+        ABSPATH=os.path.dirname(ABSPATH)
+        analysis = os.listdir(ABSPATH + '/../PPO_pretrained/analysis/' + t)
         analysis.sort()
         for file in analysis:
             Number = int(file[7:10])
