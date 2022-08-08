@@ -422,7 +422,7 @@ if __name__ == '__main__':
             args.patients_pars = (K, Init, pars)
 
             print("============================================================================================")
-            model_loc = '../PPO_pretrained/analysis/' + t +'/' +file
+            model_loc = os.path.expanduser('~')+'/capsule/data/pre_trained/analysis/'+ t +'/' +file
             reward = test(args, model_loc, t)
             AVA_REWARD[patientNo] = reward
 
