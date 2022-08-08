@@ -158,7 +158,7 @@ plt.legend([ a1, a2, a3, a4, s1, s2 ], ['C$\&$L-On',"Cpa-On ","Leu-On" ,'Treat-O
            handler_map={a1: AnyObjectHandler(color=onColor), a2:AnyObjectHandler(color=onCpa, _hatch=None),
                         a3: AnyObjectHandler(color=colorAlpha_to_rgb(cs[0], 0.01)[0], alpha = 1), a4: AnyObjectHandler(color=offColor,alpha=1, _hatch=None)}
            , fontsize =30, loc = 2, bbox_to_anchor=(-0.225, 1.05))
-plt.savefig("./Figure/Resistance_group_Strategy.png", dpi = 500)
+plt.savefig("../Analysis/Figure/Resistance_group_Strategy.png", dpi = 500)
 plt.show()
 plt.close()
 
@@ -588,5 +588,5 @@ plt.yticks(fontsize = 9)
 plt.scatter(x=1,y=mean_leu[-1], marker=4, color='black',
                 s=180, label = 'EOS', zorder=3)
 plt.tight_layout()
-plt.savefig('./Figure/resistance_I2ADT_IADT_comparision.eps', dpi=500, bbox_inches='tight')
+plt.savefig('../Analysis/Figure/resistance_I2ADT_IADT_comparision.eps', dpi=500, bbox_inches='tight')
 plt.show()
