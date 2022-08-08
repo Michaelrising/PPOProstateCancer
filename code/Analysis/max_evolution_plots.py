@@ -10,6 +10,7 @@ import gym
 import matplotlib.pyplot as plt
 # import pybullet_envs
 import seaborn as sns
+import sys
 sys.path.append("..")
 from env.gym_cancer.envs.cancercontrol import CancerControl
 def set_device(cuda=None):
