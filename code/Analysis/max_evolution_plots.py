@@ -181,7 +181,7 @@ def test(args, file):
     ad_end_c = args.ad_end_c
     sl = args.sl
 
-    patient = (A, K, pars, init_states, weight, base, m1, m2_ad, m2_ai, drug_decay, drug_length, ad_end_c, ai_end_c, sl, type)
+    patient = ( K, pars, init_states, weight, base, m1, m2_ad, m2_ai, drug_decay, drug_length, ad_end_c, ai_end_c, sl)
 
     test_env = CancerControl(patient=patient, mode='test')
 
@@ -305,7 +305,8 @@ if __name__ == '__main__':
     # resistance_group = os.listdir('./PPO_preTrained/resistance_group')
     # response_group = os.listdir('./PPO_preTrained/response_group')
     # long_response_group = os.listdir('./PPO_preTrained/long_response_group')
-    analysis = os.listdir('../../PPO_pretrained/analysis')
+    
+    analysis = os.listdir('../../PPO_pretrained/analysis/resistance') +os.listdir('../../PPO_pretrained/analysis/response')
     analysis.sort()
     AVA_REWARD = {}
     for file in analysis:

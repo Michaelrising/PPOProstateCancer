@@ -272,7 +272,7 @@ def test(args, file, t):
         os.makedirs("../../PPO_figs/analysis/")
     if not os.path.exists("../../PPO_policy/analysis/"):
         os.makedirs("../../PPO_policy/analysis/")
-    if not os.path.exists("../PPO_states/analysis/"):
+    if not os.path.exists("../../PPO_states/analysis/"):
         os.makedirs("../../PPO_states/analysis/")
     record_states_high_reward = 0
     record_dose_high_reward = 0
