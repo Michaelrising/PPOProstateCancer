@@ -388,7 +388,7 @@ if __name__ == '__main__':
     type = ['response', 'resistance']
     AVA_REWARD = {}
     for t in type:
-        analysis = os.listdir(os.path.expanduser('~')) #+'/data/pre_trained/analysis/' + t
+        analysis = os.listdir(os.path.expanduser('~')+'/capsule/data/pre_trained/analysis/'+t)
         print(analysis)
         analysis.sort()
         for file in analysis:
