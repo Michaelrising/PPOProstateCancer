@@ -179,7 +179,7 @@ for R in ['resistance', 'response']:
     plt.yticks(ticks=[0, 1, 2],labels=[0, 1, 2],fontsize=20)
     plt.legend(ncol=3, fontsize=13.5)
     plt.tight_layout()
-    plt.savefig('./Figure/' + R +'_competition_intensity.eps', dpi=300, bbox_inches='tight')
+    plt.savefig('../Analysis/Figure/' + R +'_competition_intensity.eps', dpi=300, bbox_inches='tight')
     plt.show()
 
 # response #
