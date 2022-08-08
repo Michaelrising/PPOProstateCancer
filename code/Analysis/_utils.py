@@ -14,7 +14,10 @@ import matplotlib
 import matplotlib.colors as mplc
 from matplotlib.colors import colorConverter as cC
 import sys
-sys.path.append("..")
+
+cwd = os.getcwd()
+if cwd == './code/Analysis':
+    sys.path.append("..")
 from env.gym_cancer.envs.cancercontrol import CancerControl
 from PPO import PPO
 
