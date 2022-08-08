@@ -45,7 +45,7 @@ for i in patientlist:
     else:
         patientNo = "patient" + str(i)
     pars_list = os.listdir(parsdir + patientNo)
-    patientData = np.array(pd.read_csv('../Data/dataTanaka/Bruchovsky_et_al/' + patientNo + '.txt'))
+    patientData = np.array(pd.read_csv('../data/dataTanaka/Bruchovsky_et_al/' + patientNo + '.txt'))
     finalDay_list.append(patientData[-1,-1] - patientData[0,-1])
     pars_list.sort()
     f_pars_list = []
