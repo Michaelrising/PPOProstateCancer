@@ -7,11 +7,11 @@ import torch
 import numpy as np
 import argparse
 import gym
-from env.gym_cancer.envs.cancercontrol import CancerControl
 import matplotlib.pyplot as plt
 # import pybullet_envs
 import seaborn as sns
-
+sys.path.append("..")
+from env.gym_cancer.envs.cancercontrol import CancerControl
 def set_device(cuda=None):
     print("============================================================================================")
 
