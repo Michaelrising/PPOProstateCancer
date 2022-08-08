@@ -19,6 +19,7 @@ Update 6-Aug-2022: Code Ocean Set Up
 
 ** Note 3 Due to the computational-comsuming runing time, we have already collected good outputs for each patiants saved in location: ./PPO_protrained/analysis. And can just use them to reproduce all of the results. If you wanna reproduce your own results, pls note that the path needed to be changed to desired trained model.**
  ### III. Analysis
+ (Save in ./Analysis)
  #### III.1 Generating plots of evolution dynamics 
  3.1 For obtaining patients' plots of evolution dynamics with experts strategies, run scripts: ./Analysis/experts_evolution_plots.py(This can generate pictures like Fig2.a/b Fig4/6.c)
 
