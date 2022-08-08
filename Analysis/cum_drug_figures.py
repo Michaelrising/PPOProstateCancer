@@ -21,7 +21,7 @@ for no in patientlist:
         patientNo = "patient0" + str(no)
     else:
         patientNo = "patient" + str(no)
-    clinical_data = pd.read_csv("./Data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
+    clinical_data = pd.read_csv("./data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
     cpa = np.array(clinical_data[2])
     cpa[np.isnan(cpa)] = 0
     leu = np.array(clinical_data[3])
