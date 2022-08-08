@@ -46,7 +46,7 @@ for i in patientList:
     else:
         patientNo = "patient" + str(i)
     pars_list = os.listdir(parsdir + patientNo)
-    patientData = np.array(pd.read_csv('../data/dataTanaka/Bruchovsky_et_al/' + patientNo + '.txt'))
+    patientData = np.array(pd.read_csv('../../data/dataTanaka/Bruchovsky_et_al/' + patientNo + '.txt'))
     finalDay_list.append(patientData[-1,-1] - patientData[0,-1])
     pars_list.sort()
     f_pars_list = []
@@ -147,7 +147,7 @@ plt.show()
 ############ Fig2.d ##############
 ##################################
 print("Fig2.d is saved as: ../../Analysis/Figure/Validation_PSA.eps")
-valdir = "../data/model_validate"
+valdir = "../../data/model_validate"
 vallist = os.listdir(valdir)
 true_list = []
 predict_list = []
@@ -199,13 +199,13 @@ for i in patientList:
                       np.around(high_pars_bound[i], 4)) for i in range(mean_pars_arr.shape[0])]
     LOW_CI[patientNo] = low_pars_bound
     HIGH_CI[patientNo] = high_pars_bound
-pd.DataFrame.from_dict(MEAN_PARS, orient='index', columns=['r0', 'r1', 'beta1', 'beta2', 'phi', 'gamma', 'betac']).to_csv('../Analysis/average_pars.csv')
+pd.DataFrame.from_dict(MEAN_PARS, orient='index', columns=['r0', 'r1', 'beta1', 'beta2', 'phi', 'gamma', 'betac']).to_csv('../../Analysis/average_pars.csv')
 pd.DataFrame.from_dict(LOW_CI, orient='index', columns=['r0', 'r1', 'beta1', 'beta2', 'phi', 'gamma', 'betac']).to_csv(
-    '../Analysis/csv_file/pars_low_ci.csv')
+    '../../Analysis/csv_file/pars_low_ci.csv')
 pd.DataFrame.from_dict(HIGH_CI, orient='index', columns=['r0', 'r1', 'beta1', 'beta2', 'phi', 'gamma', 'betac']).to_csv(
-    '../Analysis/csv_file/pars_high_ci.csv')
+    '../../Analysis/csv_file/pars_high_ci.csv')
 df_CI = pd.DataFrame.from_dict(CI, orient='index', columns=['r0', 'r1', 'beta1', 'beta2', 'phi', 'gamma', 'betac'])
-df_CI[['r0', 'r1', 'beta1', 'beta2']].to_csv('../Analysis/csv_file/pars_ci_14.csv', sep=';')
+df_CI[['r0', 'r1', 'beta1', 'beta2']].to_csv('../../Analysis/csv_file/pars_ci_14.csv', sep=';')
 df_CI[['phi', 'gamma', 'betac']].to_csv('../../Analysis/csv_file/pars_ci_57.csv', sep=';')
 
 
