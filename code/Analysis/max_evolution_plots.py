@@ -145,12 +145,12 @@ def test(args, file):
     random_seed = args.seed  # set random seed if required (0 = no random seed)
 
     ########################### Env Parameters ##########################
-    if not os.path.exists("../MAX_figs/analysis/"):
-        os.makedirs("../MAX_figs/analysis/")
-    if not os.path.exists("../MAX_policy/analysis/"):
-        os.makedirs("../MAX_policy/analysis/")
-    if not os.path.exists("../MAX_states/analysis/"):
-        os.makedirs("../MAX_states/analysis/")
+    if not os.path.exists("../../MAX_figs/analysis/"):
+        os.makedirs("../../MAX_figs/analysis/")
+    if not os.path.exists("../../MAX_policy/analysis/"):
+        os.makedirs("../../MAX_policy/analysis/")
+    if not os.path.exists("../../MAX_states/analysis/"):
+        os.makedirs("../../MAX_states/analysis/")
     if len(str(args.number)) == 1:
         patientNo = "patient00" + str(args.number)
     elif len(str(args.number)) == 2:
@@ -221,7 +221,7 @@ def test(args, file):
         if ep == 1:
             evolution_ = np.concatenate(evolution, axis=1).T
             pd.DataFrame(evolution_, columns=['ad', 'ai', 'psa']).to_csv(
-                "../MAX_states/analysis/" + patientNo + "_evolution_states.csv")
+                "../../MAX_states/analysis/" + patientNo + "_evolution_states.csv")
         if record_survival_month < ep_survival_month:
             record_survival_month = ep_survival_month
             record_states_high_survival_time = np.vstack(states.copy())
@@ -235,11 +235,11 @@ def test(args, file):
     # maximum rewards
     High_survival = {"states": record_states_high_survival_time, "doses": record_dose_survival_month}
 
-    savepath = "../MAX_figs/analysis/" +patientNo
+    savepath = "../../MAX_figs/analysis/" +patientNo
     plot_figure(High_survival, savepath, 1)
     # pd.DataFrame(record_states_high_survival_time).to_csv(
     #     "../MAX_states/analysis/" + patientNo + "_max_dosage_states.csv")
-    pd.DataFrame(record_dose_survival_month).to_csv("../MAX_policy/analysis/" + patientNo + "_max_dosages.csv")
+    pd.DataFrame(record_dose_survival_month).to_csv("../../MAX_policy/analysis/" + patientNo + "_max_dosages.csv")
     print("============================================================================================")
 
     return
@@ -304,7 +304,7 @@ if __name__ == '__main__':
     # resistance_group = os.listdir('./PPO_preTrained/resistance_group')
     # response_group = os.listdir('./PPO_preTrained/response_group')
     # long_response_group = os.listdir('./PPO_preTrained/long_response_group')
-    analysis = os.listdir('../PPO_pretrained/new_reward')
+    analysis = os.listdir('../../PPO_pretrained/new_reward')
     analysis.sort()
     AVA_REWARD = {}
     for file in analysis:
