@@ -11,7 +11,7 @@ import os
 
 class LoadData:
     
-    data_path = "/data/dataTanaka/Bruchovsky_et_al"
+    data_path = "../data/dataTanaka/Bruchovsky_et_al"
     
     def Patient(self):
         '''
