@@ -267,12 +267,12 @@ def test(args, file, t):
     ppo_agent.load(checkpoint_path)
 
     print("--------------------------------------------------------------------------------------------")
-    if not os.path.exists("../PPO_figs/analysis/"):
-        os.makedirs("../PPO_figs/analysis/")
-    if not os.path.exists("../PPO_policy/analysis/"):
-        os.makedirs("../PPO_policy/analysis/")
+    if not os.path.exists("../../PPO_figs/analysis/"):
+        os.makedirs("../../PPO_figs/analysis/")
+    if not os.path.exists("../../PPO_policy/analysis/"):
+        os.makedirs("../../PPO_policy/analysis/")
     if not os.path.exists("../PPO_states/analysis/"):
-        os.makedirs("../PPO_states/analysis/")
+        os.makedirs("../../PPO_states/analysis/")
     record_states_high_reward = 0
     record_dose_high_reward = 0
     record_states_high_survival_time = 0
@@ -301,10 +301,10 @@ def test(args, file, t):
                 break
         if ep==1:
             evolution_ = np.concatenate(evolution, axis=1).T
-            pd.DataFrame(evolution_, columns=['ad', 'ai', 'psa']).to_csv("../PPO_states/analysis/" + patientNo + "_evolution_states.csv")
+            pd.DataFrame(evolution_, columns=['ad', 'ai', 'psa']).to_csv("../../PPO_states/analysis/" + patientNo + "_evolution_states.csv")
             doses_ = np.stack(doses)
             pd.DataFrame(doses_, columns=["CPA", "LEU"]).to_csv(
-                "../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv")
+                "../../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv")
         if record_reward < ep_reward:
             record_reward = ep_reward
             record_states_high_reward = np.vstack(states.copy())
@@ -323,14 +323,14 @@ def test(args, file, t):
     High_reward = {"states": record_states_high_reward, "doses": record_dose_high_reward}
     High_survival = {"states": record_states_high_survival_time, "doses": record_dose_survival_month}
 
-    savepath = "../PPO_figs/analysis/" +patientNo
+    savepath = "../../PPO_figs/analysis/" +patientNo
     plot_figure(High_reward, savepath ,patientNo, 0)
     # plot_figure(High_survival, savepath, 1)
     # # pd.DataFrame(record_states_high_reward).to_csv(
     # #     "./PPO_states/analysis/" + patientNo + "_converge_high_reward_states.csv")
     # # pd.DataFrame(record_states_high_survival_time).to_csv(
     # #     "./PPO_states/analysis/" + patientNo + "_converge_high_survival_states.csv")
-    pd.DataFrame(record_dose_high_reward).to_csv("../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv")
+    pd.DataFrame(record_dose_high_reward).to_csv("../../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv")
     # pd.DataFrame(record_dose_survival_month).to_csv("./PPO_policy/analysis/" + patientNo + "_converge_high_survival_dosages.csv")
     print("============================================================================================")
 
@@ -388,7 +388,7 @@ if __name__ == '__main__':
     type = ['response', 'resistance']
     AVA_REWARD = {}
     for t in type:
-        analysis = os.listdir('../PPO_pretrained/analysis/' + t)
+        analysis = os.listdir('../../PPO_pretrained/analysis/' + t)
         analysis.sort()
         for file in analysis:
             Number = int(file[7:10])
@@ -421,7 +421,7 @@ if __name__ == '__main__':
 
             print("============================================================================================")
             print(Number)
-            model_loc = '../PPO_pretrained/analysis/' + t +'/' +file
+            model_loc = '../../PPO_pretrained/analysis/' + t +'/' +file
             reward = test(args, model_loc, t)
             AVA_REWARD[patientNo] = reward
 
