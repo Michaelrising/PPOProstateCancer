@@ -46,7 +46,7 @@ for i in patientList:
     else:
         patientNo = "patient" + str(i)
     pars_list = os.listdir(parsdir + patientNo)
-    patientData = np.array(pd.read_csv('../Data/dataTanaka/Bruchovsky_et_al/' + patientNo + '.txt'))
+    patientData = np.array(pd.read_csv('../data/dataTanaka/Bruchovsky_et_al/' + patientNo + '.txt'))
     finalDay_list.append(patientData[-1,-1] - patientData[0,-1])
     pars_list.sort()
     f_pars_list = []
@@ -147,7 +147,7 @@ plt.show()
 ############ Fig2.d ##############
 ##################################
 print("Fig2.d is saved as: ./Figure/Validation_PSA.eps")
-valdir = "../Data/model_validate"
+valdir = "../data/model_validate"
 vallist = os.listdir(valdir)
 true_list = []
 predict_list = []
