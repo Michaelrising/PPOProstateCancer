@@ -30,7 +30,7 @@ Update 6-Aug-2022: Code Ocean Set Up
  #### III.3 Generating Fig.3 
 3.4 Run scripts ./Analysis/section2_2_model_analysis.py. The output pics saved as Fig3.a: "./Analysis/Figure/distribution_gamma.eps" and Fig3.b: "./Analysis/Figure/A21_changes.eps" Fig3.c: "./Analysis/Figure/ROC_competition_index.eps"
 
-#### III.4 Generating Fig.4/6
+#### III.4 Generating Fig.4/6 and supplementary Figs
 3.5 Run scripts ./Analysis/section2_3_1_resistanse_dosing_analysis.py or section2_3_1_response_dosing_analysis.py to obtain fig4/6.a. b/c is obtained in steo III.1
 
 #### III.5 Generating Fig5/7
