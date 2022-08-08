@@ -208,7 +208,7 @@ def train(args):
 
     #### log files for multiple runs are NOT overwritten
 
-    log_dir = "../PPO_logs"
+    log_dir = "./PPO_logs"
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
 
@@ -238,7 +238,7 @@ def train(args):
 
     run_num_pretrained = 0  #### change this to prevent overwriting weights in same env_name folder
 
-    directory = "../PPO_pretrained"
+    directory = "./PPO_pretrained"
     if not os.path.exists(directory):
         os.makedirs(directory)
 
@@ -502,13 +502,13 @@ def train(args):
 
 if __name__ == '__main__':
     print("============================================================================================")
-    parsdir = "../GLV/analysis-dual-sigmoid/model_pars/"
+    parsdir = "./GLV/analysis-dual-sigmoid/model_pars/"
     env_dict = gym.envs.registration.registry.env_specs.copy()
     for env in env_dict:
         if 'CancerControl-v0' in env:
             print("Remove {} from registry".format(env))
             del gym.envs.registration.registry.env_specs[env]
-    ending_states_all_patients = pd.read_csv('../Analysis/end_states_all_patients.csv', index_col=0)
+    ending_states_all_patients = pd.read_csv('./Analysis/end_states_all_patients.csv', index_col=0)
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, default=os.path.join('config', 'sacd.yaml'))
     parser.add_argument('--env_id', type=str, default='gym_cancer:CancerControl-v0')
@@ -554,7 +554,7 @@ if __name__ == '__main__':
     else:
         patientNo = "patient" + str(args.number)
     parslist = os.listdir(parsdir + patientNo)
-    clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
+    clinical_data = pd.read_csv("./data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
     true_psa = np.array(clinical_data.loc[:, 4])
     true_psa = true_psa[~np.isnan(true_psa)]
     cell_size = 5.236e-10
