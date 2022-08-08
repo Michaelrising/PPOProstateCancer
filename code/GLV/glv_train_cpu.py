@@ -185,7 +185,7 @@ def train_glv(args, alldata):
             break
 
 parser = argparse.ArgumentParser(description='Patient arguments')
-parser.add_argument('--number', '-n', help='Patient No., int type, requested', default=25, type=int)
+parser.add_argument('--number', '-n',, default = 1, help='Patient No., int type, requested', type=int)
 parser.add_argument('--t',  default=0, type=int)
 args = parser.parse_args()
 
