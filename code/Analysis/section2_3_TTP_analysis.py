@@ -36,15 +36,15 @@ for R in ['resistance', 'response']:
         else:
             patientNo = "patient" + str(i)
         print(patientNo)
-        ppo_states = pd.read_csv('../PPO_states/analysis/' + patientNo + '_evolution_states.csv', index_col=0)
+        ppo_states = pd.read_csv('../../PPO_states/analysis/' + patientNo + '_evolution_states.csv', index_col=0)
         x_p = np.array(ppo_states.index).reshape(-1)
         X_P.append(x_p[-1].item())
 
-        experts_states = pd.read_csv('../Experts_states/analysis/' + patientNo + '_experts_states.csv', index_col=0)
+        experts_states = pd.read_csv('../../Experts_states/analysis/' + patientNo + '_experts_states.csv', index_col=0)
         x_e = np.array(experts_states.index).reshape(-1)
         X_E.append(min(x_e[-1].item(),3416))
 
-        max_states = pd.read_csv('../MAX_states/analysis/' + patientNo + '_evolution_states.csv', index_col=0)
+        max_states = pd.read_csv('../../MAX_states/analysis/' + patientNo + '_evolution_states.csv', index_col=0)
         x_m = np.array(max_states.index).reshape(-1)
         X_M.append(min(x_m[-1].item(), 3416))
 
@@ -78,7 +78,7 @@ for R in ['resistance', 'response']:
     plt.yticks(ticks=[0, 0.2, 0.4, 0.6, 0.8, 1],labels = [0, 0.2, 0.4, 0.6, 0.8, 1], fontsize = 20 )
     plt.legend(fontsize = 16)
     plt.tight_layout()
-    plt.savefig('../Analysis/Figure/' + R + "_progression_free_survival_rate.eps", dpi=300, bbox_inches='tight')
+    plt.savefig('../../Analysis/Figure/' + R + "_progression_free_survival_rate.eps", dpi=300, bbox_inches='tight')
     plt.show()
     TTP = pd.DataFrame(np.concatenate((X_P, X_E, X_M), axis = 0)/28, columns=['TTP'])
     strategy = ['I2ADT', 'IADT', 'ADT']
@@ -95,7 +95,7 @@ for R in ['resistance', 'response']:
     plt.hlines(np.mean(X_E)/28, 0.75, 1.25, colors=cs[3], lw=3)
     plt.hlines(np.mean(X_M)/28, 1.75, 2.25, colors=cs[7], lw=3)
     plt.tight_layout()
-    plt.savefig('../Analysis/Figure/' + R + "_TTP_distribution.eps", dpi=300)
+    plt.savefig('../../Analysis/Figure/' + R + "_TTP_distribution.eps", dpi=300)
     plt.show()
     print(ttest_rel(X_P, X_E))
 
