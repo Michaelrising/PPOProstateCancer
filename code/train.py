@@ -502,7 +502,7 @@ def train(args):
 
 if __name__ == '__main__':
     print("============================================================================================")
-    parsdir = "./GLV/analysis-dual-sigmoid/model_pars/"
+    parsdir = "../GLV/analysis-dual-sigmoid/model_pars/"
     env_dict = gym.envs.registration.registry.env_specs.copy()
     for env in env_dict:
         if 'CancerControl-v0' in env:
@@ -554,7 +554,7 @@ if __name__ == '__main__':
     else:
         patientNo = "patient" + str(args.number)
     parslist = os.listdir(parsdir + patientNo)
-    clinical_data = pd.read_csv("./data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
+    clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
     true_psa = np.array(clinical_data.loc[:, 4])
     true_psa = true_psa[~np.isnan(true_psa)]
     cell_size = 5.236e-10
