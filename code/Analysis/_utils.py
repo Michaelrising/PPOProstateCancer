@@ -16,12 +16,11 @@ from matplotlib.colors import colorConverter as cC
 import sys
 
 cwd = os.getcwd()
-print(cwd)
 if cwd == './code/Analysis':
     sys.path.append("..")
 elif cwd == './code':
     sys.path.append(".")
-from env.gym_cancer.envs.cancercontrol import CancerControl
+from .env.gym_cancer.envs.cancercontrol import CancerControl
 from PPO import PPO
 
 class AnyObject:
