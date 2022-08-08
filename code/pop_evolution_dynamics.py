@@ -15,7 +15,6 @@ import sys
 sys.path.append(".")
 from env.gym_cancer.envs.cancercontrol import CancerControl
 from PPO import PPO
-
 def set_device(cuda=None):
     print("============================================================================================")
 
@@ -388,21 +387,20 @@ if __name__ == '__main__':
     device = set_device() if args.cuda_cpu == "cpu" else set_device(args.cuda)
     type = ['response', 'resistance']
     AVA_REWARD = {}
-    for t in type:
-        sys.path.append(".")
-        analysis = os.listdir('./PPO_pretrained/analysis/' + t)
-        analysis.sort()
-        for file in analysis:
-            Number = int(file[7:10])
-            args.number = Number
-            if len(str(args.number)) == 1:
-                patientNo = "patient00" + str(args.number)
-            elif len(str(args.number)) == 2:
-                patientNo = "patient0" + str(args.number)
-            else:
-                patientNo = "patient" + str(args.number)
-            ending_states = ending_states_all_patients.loc[args.number]
-            args.m2_ad, args.m2_ai, args.ad_end_c, args.sl = ending_states.m_ad, ending_states.m_ai, ending_states.c_ad, ending_states.sl
+    analysis = os.listdir('./PPO_policy/analysis/')
+    analysis.sort()
+    for file in analysis:
+        Number = int(file[7:10])
+        args.number = Number
+        patientNo = file[:10]
+        # if len(str(args.number)) == 1:
+        #     patientNo = "patient00" + str(args.number)
+        # elif len(str(args.number)) == 2:
+        #     patientNo = "patient0" + str(args.number)
+        # else:
+        #     patientNo = "patient" + str(args.number)
+        ending_states = ending_states_all_patients.loc[args.number]
+        args.m2_ad, args.m2_ai, args.ad_end_c, args.sl = ending_states.m_ad, ending_states.m_ai, ending_states.c_ad, ending_states.sl
             parslist = os.listdir(parsdir + patientNo)
             clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
             true_psa = np.array(clinical_data.loc[:, 4])
