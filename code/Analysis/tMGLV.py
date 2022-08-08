@@ -14,9 +14,8 @@ import pandas as pd
 import argparse
 import os
 from torch import nn, optim
-from .LoadData import LoadData
+from LoadData import LoadData
 import shutil
-
 from typing import Callable, Union, Mapping, Any, Sequence, Optional
 import xitorch
 from xitorch import integrate
