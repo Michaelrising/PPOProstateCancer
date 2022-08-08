@@ -16,6 +16,7 @@ from matplotlib.colors import colorConverter as cC
 import sys
 
 cwd = os.getcwd()
+print(cwd)
 if cwd == './code/Analysis':
     sys.path.append("..")
 from env.gym_cancer.envs.cancercontrol import CancerControl
