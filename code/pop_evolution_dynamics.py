@@ -401,16 +401,16 @@ if __name__ == '__main__':
         #     patientNo = "patient" + str(args.number)
         ending_states = ending_states_all_patients.loc[args.number]
         args.m2_ad, args.m2_ai, args.ad_end_c, args.sl = ending_states.m_ad, ending_states.m_ai, ending_states.c_ad, ending_states.sl
-            parslist = os.listdir(parsdir + patientNo)
-            clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
-            true_psa = np.array(clinical_data.loc[:, 4])
-            true_psa = true_psa[~np.isnan(true_psa)]
-            cell_size = 5.236e-10
-            mean_v = 5
-            Mean_psa = 22.1
-            PARS_LIST = []
-            # reading the ode parameters and the initial/terminal states
-            for arg in parslist:
+        parslist = os.listdir(parsdir + patientNo)
+        clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
+        true_psa = np.array(clinical_data.loc[:, 4])
+        true_psa = true_psa[~np.isnan(true_psa)]
+        cell_size = 5.236e-10
+        mean_v = 5
+        Mean_psa = 22.1
+        PARS_LIST = []
+        # reading the ode parameters and the initial/terminal states
+        for arg in parslist:
                 pars_df = pd.read_csv(parsdir + patientNo + '/' + arg)
                 _, K, states, pars, best_pars = [np.array(pars_df.loc[i, ~np.isnan(pars_df.loc[i, :])]) for i in range(5)]
                 PARS_LIST.append(best_pars)
