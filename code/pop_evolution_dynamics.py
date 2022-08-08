@@ -389,7 +389,7 @@ if __name__ == '__main__':
     AVA_REWARD = {}
     for t in type:
         print(os.path.expanduser('~'))
-        analysis = os.listdir(os.path.expanduser('~')+'/data/pre_trained/analysis/' + t)
+        analysis = os.listdir(os.path.expanduser('~')) #+'/data/pre_trained/analysis/' + t
         analysis.sort()
         for file in analysis:
             Number = int(file[7:10])
