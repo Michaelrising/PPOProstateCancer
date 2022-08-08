@@ -34,6 +34,7 @@ class CancerODEGlv_CPU(xitorch.EditableModule):
         self.pars = params["pars"]
         self.type = params['type']
         self.data = LoadData()._Patient_data(patientNo)
+        # Data preparation
         if patientNo == "patient002":
             self.data = self.data[:84]
         if patientNo == "patient046":
