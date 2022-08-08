@@ -75,17 +75,17 @@ for R in ['resistance', 'response']:
         phi, gamma = pars[-3:-1]
         a21 = t / (1 + np.exp(-gamma * X/12/28))
         A21.append(a21)
-        ppo_states = pd.read_csv('../PPO_states/analysis/' + patientNo + '_evolution_states.csv', index_col=0)
+        ppo_states = pd.read_csv('../../PPO_states/analysis/' + patientNo + '_evolution_states.csv', index_col=0)
         x_p = np.array(ppo_states.index).reshape(-1)
         X_P.append(x_p[-1].item())
         c2_p = (ppo_states.ad * (t / (1 + np.exp(-gamma * x_p / 12 / 28)).reshape(-1)) / K[1]) ** phi
         C2_P.append(c2_p)
-        experts_states = pd.read_csv('../Experts_states/analysis/' + patientNo + '_experts_states.csv', index_col=0)
+        experts_states = pd.read_csv('../../Experts_states/analysis/' + patientNo + '_experts_states.csv', index_col=0)
         x_e = np.array(experts_states.index).reshape(-1)
         X_E.append(x_e[-1].item())
         c2_e =  (experts_states.ad * (t / (1 + np.exp(-gamma*x_e/12/28)).reshape(-1)) / K[1]) ** phi
         C2_E.append(c2_e)
-        max_states = pd.read_csv('../MAX_states/analysis/' + patientNo + '_evolution_states.csv', index_col=0)
+        max_states = pd.read_csv('../../MAX_states/analysis/' + patientNo + '_evolution_states.csv', index_col=0)
         x_m = np.array(max_states.index).reshape(-1)
         X_M.append(x_m[-1].item())
         c2_m = (max_states.ad * (t / (1 + np.exp(-gamma * x_m / 12 / 28)).reshape(-1)) / K[1]) ** phi
@@ -179,7 +179,7 @@ for R in ['resistance', 'response']:
     plt.yticks(ticks=[0, 1, 2],labels=[0, 1, 2],fontsize=20)
     plt.legend(ncol=3, fontsize=13.5)
     plt.tight_layout()
-    plt.savefig('../Analysis/Figure/' + R +'_competition_intensity.eps', dpi=300, bbox_inches='tight')
+    plt.savefig('../../Analysis/Figure/' + R +'_competition_intensity.eps', dpi=300, bbox_inches='tight')
     plt.show()
 
 # response #
