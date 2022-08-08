@@ -201,9 +201,9 @@ for patient_i in df_ppo_drug.index:
             on_off+=1
     ppo_onoff_freq.append(on_off)
     patient_cpa = np.array(df_ppo_CPA.loc[patient_i, ~np.isnan(df_ppo_CPA.loc[patient_i])])
-    cpa_daily = sum(patient_cpa)/(patient_cpa.shape[0]) * 200
+    cpa_daily = sum(patient_cpa)/(patient_cpa.shape[0]) 
     patient_leu = np.array(df_ppo_LEU.loc[patient_i, ~np.isnan(df_ppo_LEU.loc[patient_i])])
-    leu_monthly = sum(patient_leu)/(patient_leu.shape[0]) * 7.5
+    leu_monthly = sum(patient_leu)/(patient_leu.shape[0]) 
     ppo_cpa_daily.append(cpa_daily)
     ppo_leu_monthly.append(leu_monthly)
 ppo_cpa_daily = pd.DataFrame(ppo_cpa_daily, index=patientLables)
