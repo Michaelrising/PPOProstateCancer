@@ -2,4 +2,4 @@
 set -ex
 
 # This is the master script for the capsule. When you click "Reproducible Run", the code in this file will execute.
-python -u Analysis/section2_3_1_resistance_dosing_analysis.py "$@"
+python -u train.py "$@"
