@@ -45,7 +45,7 @@ for i in patientlist:
     else:
         patientNo = "patient" + str(i)
     pars_list = os.listdir(parsdir + patientNo)
-    patientData = np.array(pd.read_csv('../data/dataTanaka/Bruchovsky_et_al/' + patientNo + '.txt'))
+    patientData = np.array(pd.read_csv('../../data/dataTanaka/Bruchovsky_et_al/' + patientNo + '.txt'))
     finalDay_list.append(patientData[-1,-1] - patientData[0,-1])
     pars_list.sort()
     f_pars_list = []
@@ -323,7 +323,7 @@ plt.yticks(ticks=[0, 0.2, 0.4, 0.6, 0.8], labels = [0, 2, 4, 6, 8], fontsize=23)
 plt.ylabel('')
 #plt.xticks(ticks=[], labels=[])
 plt.tight_layout()
-plt.savefig('../Analysis/Figure/distribution_gamma.eps', dpi=300,  bbox_inches = 'tight')
+plt.savefig('../../Analysis/Figure/distribution_gamma.eps', dpi=300,  bbox_inches = 'tight')
 plt.show()
 
 plt.style.use(['science', 'nature'])
@@ -367,7 +367,7 @@ legend_elements = [Line2D([0], [0], marker = 'o', color='w', label=legends[i],
                           markerfacecolor=mcolor, markersize=8) for i, mcolor in enumerate(colors)]
 #plt.legend(handles = legend_elements, ncol=2, fontsize = 16.5)
 plt.tight_layout()
-plt.savefig('../Analysis/Figure/distribution_three_characteristics.eps', dpi=300,  bbox_inches = 'tight')
+plt.savefig('../../Analysis/Figure/distribution_three_characteristics.eps', dpi=300,  bbox_inches = 'tight')
 plt.show()
 
 # difference of gamma between response and resistance #
@@ -448,7 +448,7 @@ plt.yticks(fontsize=23)
 plt.ylim(0.25, 0.55)
 plt.legend(fontsize=18)
 plt.tight_layout()
-plt.savefig('../Analysis/Figure/A21_changes.eps', dpi=300, bbox_inches = 'tight')
+plt.savefig('../../Analysis/Figure/A21_changes.eps', dpi=300, bbox_inches = 'tight')
 plt.show()
 
 
