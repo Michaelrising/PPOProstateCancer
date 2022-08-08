@@ -388,6 +388,8 @@ if __name__ == '__main__':
     type = ['response', 'resistance']
     AVA_REWARD = {}
     for t in type:
+        a = os.listdir('../PPO_pretrained/analysis')
+        print(a)
         analysis = os.listdir('../PPO_pretrained/analysis/' + t)
         analysis.sort()
         for file in analysis:
