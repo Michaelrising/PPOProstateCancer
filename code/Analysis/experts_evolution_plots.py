@@ -16,10 +16,10 @@ from _utils import *
 #
 
 handbox = moff.DrawingArea(width = 60, height=21)
-extra_path = "../Experts_policy/analysis/prediction/"
+extra_path = "../../Experts_policy/analysis/prediction/"
 if not os.path.exists(extra_path):
     os.mkdir(extra_path)
-savepath = "../Experts_figs/analysis/"
+savepath = "../../Experts_figs/analysis/"
 parsDir = '../GLV/analysis-dual-sigmoid/model_pars/'
 # parsDir = '../GLV/analysis-sigmoid/model_pars/gcp/'
 if not os.path.exists(savepath):
@@ -88,7 +88,7 @@ for no in patientlist:
         print(patientNo)
         A, K, states, final_pars, best_pars = [torch.from_numpy(np.array(pars_df.loc[i, ~np.isnan(pars_df.loc[i, :])])).float() for
                                                i in range(5)]
-        actions_seq = np.array(pd.read_csv("../Experts_policy/" + patientNo + "_actions_seqs.csv"))[:, 0]
+        actions_seq = np.array(pd.read_csv("../../Experts_policy/" + patientNo + "_actions_seqs.csv"))[:, 0]
         original_steps = actions_seq.shape[0]
         actions_seqs_prediction = deque(actions_seq[np.where(actions_seq != 0)[0]])
         Days = data[:, 6] - data[0, 6]
@@ -292,7 +292,7 @@ for no in patientlist:
     mean_psa = np.array([np.mean(PSA_arr[PSA_arr[:, i] != -1, i], axis=0) for i in range(PSA_arr.shape[1])])
     sd_psa = np.array([st.sem(PSA_arr[PSA_arr[:, i] != -1, i]) for i in range(PSA_arr.shape[1])])
     low_psa_bound, high_psa_bound = st.t.interval(0.95, 10 - 1, loc=mean_psa, scale=sd_psa)
-    pd.DataFrame(np.stack((mean_ad, mean_ai, mean_psa), axis=1), columns=['ad', 'ai', 'psa']).to_csv("../Experts_states/analysis/"+patientNo+'_experts_states.csv')
+    pd.DataFrame(np.stack((mean_ad, mean_ai, mean_psa), axis=1), columns=['ad', 'ai', 'psa']).to_csv("../../Experts_states/analysis/"+patientNo+'_experts_states.csv')
     cs = sns.color_palette("Paired")
     # plt.style.use('seaborn')
     plt.style.use(["science", "nature"])
@@ -400,4 +400,4 @@ range_c2_all_patients = np.array(range_c1_all_patients).reshape(-1, 2)
 end_states_all_patients = np.concatenate((metastasis_all_patients, max_ad_c_all_patients, max_ai_c_all_patients,
                                           survival_length_all_patients, range_c1_all_patients, range_c2_all_patients),axis=1)
 pd.DataFrame(end_states_all_patients, columns=['m_ad', 'm_ai', 'c_ad', 'c_ai','sl', 'minc1', 'maxc1', 'minc2', 'maxc2'], index=patientlist).to_csv('end_states_all_patients.csv')
-pd.DataFrame(s_endlist, index=s_end_patients).to_csv('../Experts_policy/analysis/s_end_list.csv')
+pd.DataFrame(s_endlist, index=s_end_patients).to_csv('../../Experts_policy/analysis/s_end_list.csv')
