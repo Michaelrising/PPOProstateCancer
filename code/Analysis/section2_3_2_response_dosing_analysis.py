@@ -17,7 +17,7 @@ response = [1, 2, 3, 4, 6, 13, 15, 16, 17, 20, 24, 29, 30, 31, 32, 37, 40, 42, 4
             58, 60, 61, 62, 63, 66, 71, 75, 77, 78, 79, 84, 86, 87, 91, 92, 93, 94, 95, 96, 97,
             100, 102, 104, 105, 106, 108]
 response.sort()
-simulation_end_cinical = pd.read_csv("../Experts_policy/analysis/s_end_list.csv",names=['Days'],index_col=0, header=0)
+simulation_end_cinical = pd.read_csv("../../Experts_policy/analysis/s_end_list.csv",names=['Days'],index_col=0, header=0)
 parsdir = "../GLV/analysis-dual-sigmoid/model_pars/"
 patientLables = []
 patientCPA = []
@@ -37,7 +37,7 @@ for i in response:
         patientNo = "patient" + str(i)
     print(patientNo)
     response_all.append(patientNo)
-    doseSeq = pd.read_csv("../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv", names = ["Month", "CPA", "LEU"], header=0)
+    doseSeq = pd.read_csv("../../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv", names = ["Month", "CPA", "LEU"], header=0)
     patientLables.append(patientNo)
     patientSurvivalTime.append(np.array(doseSeq).shape[0] * 28)
     doseSeq["CPA"] = doseSeq["CPA"]
@@ -124,7 +124,7 @@ for l, patient in enumerate(response_all):
         CPA = [0, 50, 100, 150, 200]
         LEU = [0, 7.5]
         try: 
-            extraDose = pd.read_csv("../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv")
+            extraDose = pd.read_csv("../../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv")
         except FileNotFoundError:
             print("There is NO prediction of "+patient+"!!")
             continue
@@ -164,7 +164,7 @@ plt.legend([ a1, a2, a3, a4, s1, s2 ], ['C$\&$L-On',"Cpa-On ","Leu-On" ,'Treat-O
            handler_map={a1: AnyObjectHandler(color=onColor), a2:AnyObjectHandler(color=onCpa, _hatch=None),
                         a3: AnyObjectHandler(color=colorAlpha_to_rgb(cs[0], 0)[0], alpha = 1), a4: AnyObjectHandler(color=offColor,alpha=1, _hatch=None)}
            , fontsize =30, loc = 2, bbox_to_anchor=(-0.225, 0.7))
-plt.savefig("../Analysis/Figure/Response_group_Strategy.png", dpi = 500)
+plt.savefig("../../Analysis/Figure/Response_group_Strategy.png", dpi = 500)
 plt.show()
 plt.close()
 
@@ -182,7 +182,7 @@ for i in response:
     else:
         patientNo = "patient" + str(i)
     print(patientNo)
-    statesSeq = pd.read_csv("../PPO_states/analysis/" + patientNo +'_evolution_states.csv', names = ["AD", "AI", "PSA"], header=0)
+    statesSeq = pd.read_csv("../../PPO_states/analysis/" + patientNo +'_evolution_states.csv', names = ["AD", "AI", "PSA"], header=0)
     patientLables.append(patientNo)
     psa = statesSeq['PSA']
     diff1_psa = psa.diff()
@@ -290,7 +290,7 @@ for i in response:
     else:
         patientNo = "patient" + str(i)
     print(patientNo)
-    doseSeq = pd.read_csv("../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv", names = ["Month", "CPA", "LEU"], header=0)
+    doseSeq = pd.read_csv("../../PPO_policy/analysis/" + patientNo + "_rl_dosages.csv", names = ["Month", "CPA", "LEU"], header=0)
     doseSeq["CPA"] = doseSeq["CPA"] / 200
     doseSeq["LEU"] = doseSeq["LEU"] / 7.5
     month = np.array(doseSeq['Month']).reshape(-1)
@@ -487,7 +487,7 @@ for l, patient in enumerate(response_all):
     # transition = Days[-1]
     if np.isnan(simu_stop.loc[patient].item()):
         try: 
-            extraDose = np.array(pd.read_csv("../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv", index_col=0)).reshape(-1)
+            extraDose = np.array(pd.read_csv("../../Experts_policy/analysis/prediction/" +patient+"_predicted_doseSeq.csv", index_col=0)).reshape(-1)
         except FileNotFoundError:
             print("There is NO prediction of "+patient+"!!")
             continue
@@ -597,5 +597,5 @@ plt.yticks(fontsize = 9)
 plt.scatter(x=1,y=mean_leu[-1], marker=4, color='black',
                 s=180, label = 'EOS', zorder=3)
 plt.tight_layout()
-plt.savefig('../Analysis/Figure/response_I2ADT_IADT_comparision.eps', dpi=500, bbox_inches='tight')
+plt.savefig('../../Analysis/Figure/response_I2ADT_IADT_comparision.eps', dpi=500, bbox_inches='tight')
 plt.show()
