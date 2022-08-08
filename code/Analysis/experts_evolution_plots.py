@@ -7,11 +7,11 @@ from collections import deque
 from scipy.stats import bernoulli
 # import xitorch
 import random
-from .tMGLV import CancerODEGlv_CPU
 from xitorch import integrate
-from .LoadData import LoadData
 import seaborn as sns
 import scipy.stats as st
+from tMGLV import CancerODEGlv_CPU
+from LoadData import LoadData
 from _utils import *
 #
 
