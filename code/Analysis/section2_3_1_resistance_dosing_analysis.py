@@ -94,7 +94,7 @@ plt.xlim(-10, 3600)
 
 ax2 = fig.add_subplot(1,2,2)
 for l, patient in enumerate(resistance_all):
-    clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patient + ".txt", header=None)
+    clinical_data = pd.read_csv("../../data/dataTanaka/Bruchovsky_et_al/" + patient + ".txt", header=None)
     ONOFF = np.array(clinical_data.loc[:, 7])
     drugOnDays = 0
     drugOffDays = 0
@@ -218,7 +218,7 @@ cpa_clinical_daily = []
 leu_clinical_monthly = []
 clinical_onoff_freq = []
 for patient_i in df_ppo_drug.index:
-    clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patient_i + ".txt", header=None)
+    clinical_data = pd.read_csv("../../data/dataTanaka/Bruchovsky_et_al/" + patient_i + ".txt", header=None)
     onoff = np.array(clinical_data.loc[:, 7])
     Days = np.array(clinical_data.loc[:, 9].diff()[1:])
     Days = np.append(Days, 28)
@@ -445,7 +445,7 @@ cpa = np.array([0, 50, 100, 150, 200])/200
 leu = np.array([0, 7.5])/7.5
 _action_set = np.stack((np.tile(cpa, 2), np.sort(leu.repeat(5))), axis=1)
 for l, patient in enumerate(resistance_all):
-    clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patient + ".txt", header=None)
+    clinical_data = pd.read_csv("../../data/dataTanaka/Bruchovsky_et_al/" + patient + ".txt", header=None)
     ONOFF = np.array(clinical_data.loc[:, 7])
     Days = np.array(clinical_data.loc[:, 9]) - np.array(clinical_data.loc[0, 9])
     Days_diff = np.append(np.diff(Days), 28)
