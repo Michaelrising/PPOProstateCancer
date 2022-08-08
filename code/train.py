@@ -404,4 +404,180 @@ def train(args):
             # rewards, survivalMonth, actions, states, colors = evaluate(test_env, ppo_agent.policy_old, eval_times)
             g_rewards, g_survivalMonth, g_actions, g_states, g_colors = greedy_evaluate(test_env, ppo_agent.policy_old,
                                                                                         eval_times)
-            # writer.add_scalar("Reward/evaluat
+            # writer.add_scalar("Reward/evaluate", rewards, i_update)
+            writer.add_scalar("Reward/greedy_evaluate", g_rewards, i_update)
+            writer.add_scalar("Survival month", g_survivalMonth, i_update)
+            # log_f.write('{},{}\n'.format(actions, g_actions))
+            # log_f.flush()
+            if g_rewards > reward_record and i_update >= model_save_start_updating_steps:
+                reward_record = g_rewards
+                x = np.arange(g_states.shape[0])
+                ad = g_states[:, 0]
+                ai = g_states[:, 1]
+                psa = g_states[:, 2]
+                fig = plt.figure(figsize=(15, 5))
+                ax1 = fig.add_subplot(1, 3, 1)
+                ax1.plot(x, psa, color="black", linestyle="-", linewidth=1)
+                plt.scatter(x, psa, color=g_colors)
+                ax1.set_xlabel("Time (months)")
+                ax1.set_ylabel("PSA level (ug/ml)")
+
+                ax2 = fig.add_subplot(1, 3, 2)
+                ax2.plot(x, ad, color="black", linestyle="--", linewidth=1, label="AD")
+                ax2.plot(x, ai, color="black", linestyle="-.", linewidth=1, label="AI")
+                ax2.set_xlabel("Time (months)")
+                ax2.set_ylabel("Cell counts")
+                ax2.legend(loc='upper right')
+
+                phi, gamma = pars[-3:-1]
+                a = 1 / (1 + np.exp(-gamma * x / 12.)).reshape(-1)
+                c1 = (ai * a / K[0]) ** phi
+                c2 = (ad * a / K[1]) ** phi
+                ax3 = fig.add_subplot(1, 3, 3)
+                ax3.plot(x, c1, color="black", linestyle="--", linewidth=1, label="c1:AI to AD")
+                ax3.plot(x, c2, color="black", linestyle="-.", linewidth=1, label="c2:AD to AI")
+                ax2.set_xlabel("Time (months)")
+                ax2.set_ylabel("Competition intensity")
+                ax2.legend(loc='upper right')
+                plt.savefig(summary_dir + "/best_model.png", dpi=150)
+                plt.close()
+
+                print("--------------------------------------------------------------------------------------------")
+                print("saving model at : " + checkpoint_path + "best/" + checkpoint_format)
+                ppo_agent.save(checkpoint_path + "best/" + checkpoint_format)
+                print("model saved")
+                print("Elapsed Time  : ", datetime.now().replace(microsecond=0) - start_time)
+                print("--------------------------------------------------------------------------------------------")
+
+            # save model weights
+            if i_update % save_model_freq == 0:
+                x = np.arange(g_states.shape[0])
+                ad = g_states[:, 0]
+                ai = g_states[:, 1]
+                psa = g_states[:, 2]
+                fig = plt.figure(figsize=(15, 5))
+                ax1 = fig.add_subplot(1, 3, 1)
+                ax1.plot(x, psa, color="black", linestyle="-", linewidth=1)
+                plt.scatter(x, psa, color=g_colors)
+                ax1.set_xlabel("Time (months)")
+                ax1.set_ylabel("PSA level (ug/ml)")
+
+                ax2 = fig.add_subplot(1, 3, 2)
+                ax2.plot(x, ad, color="black", linestyle="--", linewidth=1, label="AD")
+                ax2.plot(x, ai, color="black", linestyle="-.", linewidth=1, label="AI")
+                ax2.set_xlabel("Time (months)")
+                ax2.set_ylabel("Cell counts")
+                ax2.legend(loc='upper right')
+
+                phi, gamma = pars[-3:-1]
+                a = 1 / (1 + np.exp(-gamma * x/12)).reshape(-1)
+                c1 = (ai * a / K[0]) ** phi
+                c2 = (ad * a / K[1]) ** phi
+                ax3 = fig.add_subplot(1, 3, 3)
+                ax3.plot(x, c1, color="black", linestyle="--", linewidth=1, label="c1")
+                ax3.plot(x, c2, color="black", linestyle="-.", linewidth=1, label="c2")
+                ax3.set_xlabel("Time (months)")
+                ax3.set_ylabel("Competition intensity")
+                ax3.legend(loc='upper right')
+                plt.savefig(summary_dir + "/final_model.png", dpi=150)
+                plt.close()
+
+                print("--------------------------------------------------------------------------------------------")
+                print("saving model at : " + checkpoint_path + "final/" + checkpoint_format)
+                ppo_agent.save(checkpoint_path + "final/" + checkpoint_format)
+                print("model saved")
+                print("Elapsed Time  : ", datetime.now().replace(microsecond=0) - start_time)
+                print("--------------------------------------------------------------------------------------------")
+
+    # log_f.close()
+
+    # print total training time
+    print("============================================================================================")
+    end_time = datetime.now().replace(microsecond=0)
+    print("Started training at (GMT) : ", start_time)
+    print("Finished training at (GMT) : ", end_time)
+    print("Total training time  : ", end_time - start_time)
+    print("============================================================================================")
+
+
+if __name__ == '__main__':
+    print("============================================================================================")
+    parsdir = "./GLV/analysis-dual-sigmoid/model_pars/"
+    env_dict = gym.envs.registration.registry.env_specs.copy()
+    for env in env_dict:
+        if 'CancerControl-v0' in env:
+            print("Remove {} from registry".format(env))
+            del gym.envs.registration.registry.env_specs[env]
+    ending_states_all_patients = pd.read_csv('./Analysis/end_states_all_patients.csv', index_col=0)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', type=str, default=os.path.join('config', 'sacd.yaml'))
+    parser.add_argument('--env_id', type=str, default='gym_cancer:CancerControl-v0')
+    parser.add_argument('--cuda', type=int, default=0)
+    parser.add_argument("--cuda_cpu", type=str, default="cuda", help="Set device as cuda or cpu")
+    parser.add_argument('--m1', type=float, default=0.8)
+    parser.add_argument('--m2_ai', type=int, default=12)
+    parser.add_argument('--m2_ad', type=int, default=12)
+    parser.add_argument('--drug_decay', type=float, default=0.75, help="The decay rate for drug penalty")
+    parser.add_argument('--ai_end_c', type=float, default=0.8,
+                        help='The concentration of AI phenotype for determining the simulation end')
+    parser.add_argument('--ad_end_c', type=float, default=0.9,
+                        help='The concentration of AI phenotype for determining the simulation end')
+    parser.add_argument('--sl', type=float, default=120,
+                        help='survival month for patients')
+    parser.add_argument('--type', type=float, default=1)
+    parser.add_argument('--seed', type=int, default=0)  # random.randint(0,100000))
+    parser.add_argument('--patients_pars', type=tuple, default=(0,))
+    parser.add_argument('--patients_train', type=list, default=[])
+    parser.add_argument('--number', '-n', type=int, help='Patient No., int type, requested',
+                        default=1)  # the only one argument needed to be inputted
+    parser.add_argument('--num_env', type=int, help='number of environments',
+                        default=2)
+    parser.add_argument('--max_updates', type=int, help='max number of updating times',
+                        default=int(1e5))
+    parser.add_argument("--eval_interval", type=int, help="interval to evaluate the policy and plot figures",
+                        default=50)
+    parser.add_argument('--decayflag', type=bool, default=True, help='lr decay flag')
+    parser.add_argument('--model_save_start_updating_steps', type=int, default=500,
+                        help="The start steps of saving best model")
+    parser.add_argument("--eval_times", type=int, default=10, help='The evaluation time of current policy')
+    args = parser.parse_args()
+    ending_states = ending_states_all_patients.loc[args.number]
+    args.m2_ad, args.m2_ai, args.ad_end_c, args.sl = ending_states.m_ad, ending_states.m_ai, ending_states.c_ad, ending_states.sl
+    if args.number == 32:
+        args.m2_ad = 1.
+    if args.number in [11, 12, 19, 25, 36, 54, 85, 88, 99, 101]: # 52 type = 1
+        args.type = 2.
+    if len(str(args.number)) == 1:
+        patientNo = "patient00" + str(args.number)
+    elif len(str(args.number)) == 2:
+        patientNo = "patient0" + str(args.number)
+    else:
+        patientNo = "patient" + str(args.number)
+    parslist = os.listdir(parsdir + patientNo)
+    clinical_data = pd.read_csv("./Data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
+    true_psa = np.array(clinical_data.loc[:, 4])
+    true_psa = true_psa[~np.isnan(true_psa)]
+    cell_size = 5.236e-10
+    mean_v = 5
+    Mean_psa = 22.1
+    PARS_LIST = []
+    # reading the ode parameters and the initial/terminal states
+    for arg in parslist:
+        if arg.endswith('.csv'):
+            pars_df = pd.read_csv(parsdir + patientNo + '/' + arg)
+            _, K, states, pars, best_pars = [np.array(pars_df.loc[i, ~np.isnan(pars_df.loc[i, :])]) for i in range(5)]
+            PARS_LIST.append(best_pars)
+    # Init = np.array([mean_v / Mean_psa * true_psa[0] / cell_size, 1e-4 * K[1], true_psa[0]])
+    Init_states = states[:3]
+    PARS_ARR = np.stack(PARS_LIST)
+    pars = np.mean(PARS_ARR, axis=0)
+    args.patients_pars = (K, Init_states, pars)
+    train(args)
+
+
+
+
+
+
+
+
