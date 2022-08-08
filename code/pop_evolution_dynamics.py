@@ -414,17 +414,15 @@ if __name__ == '__main__':
                 pars_df = pd.read_csv(parsdir + patientNo + '/' + arg)
                 _, K, states, pars, best_pars = [np.array(pars_df.loc[i, ~np.isnan(pars_df.loc[i, :])]) for i in range(5)]
                 PARS_LIST.append(best_pars)
-            print(states)
-            Init = states[0:3]
-            PARS_ARR = np.stack(PARS_LIST)
-            pars = np.mean(PARS_ARR, axis=0)
-            args.patients_pars = (K, Init, pars)
+        Init = states[0:3]
+        PARS_ARR = np.stack(PARS_LIST)
+        pars = np.mean(PARS_ARR, axis=0)
+        args.patients_pars = (K, Init, pars)
 
-            print("============================================================================================")
-            print(Number)
-            model_loc = '../PPO_pretrained/analysis/' + t +'/' +file
-            reward = test(args, model_loc, t)
-            AVA_REWARD[patientNo] = reward
+        print("============================================================================================")
+        model_loc = '../PPO_pretrained/analysis/' + t +'/' +file
+        reward = test(args, model_loc, t)
+        AVA_REWARD[patientNo] = reward
 
     AVA_REWARD = pd.DataFrame.from_dict(AVA_REWARD, orient='index')
     AVA_REWARD.to_csv('./Analysis/HK_average_rewards_all_patients.csv')
