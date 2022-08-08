@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.lines import Line2D
 import sys
-sys.path.append(".)
+sys.path.append(".")
 from env.gym_cancer.envs.cancercontrol import CancerControl
 from PPO import PPO
 
