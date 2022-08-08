@@ -414,7 +414,8 @@ if __name__ == '__main__':
                 pars_df = pd.read_csv(parsdir + patientNo + '/' + arg)
                 _, K, states, pars, best_pars = [np.array(pars_df.loc[i, ~np.isnan(pars_df.loc[i, :])]) for i in range(5)]
                 PARS_LIST.append(best_pars)
-            Init = states[:3]
+            print(states)
+            Init = states[0:3]
             PARS_ARR = np.stack(PARS_LIST)
             pars = np.mean(PARS_ARR, axis=0)
             args.patients_pars = (K, Init, pars)
