@@ -238,7 +238,7 @@ def train(args):
 
     run_num_pretrained = 0  #### change this to prevent overwriting weights in same env_name folder
 
-    directory = "./PPO_pretrained"
+    directory = "../PPO_pretrained"
     if not os.path.exists(directory):
         os.makedirs(directory)
 
