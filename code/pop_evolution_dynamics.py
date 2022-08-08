@@ -390,6 +390,7 @@ if __name__ == '__main__':
     for t in type:
         ABSPATH=os.path.abspath(sys.argv[0])
         ABSPATH=os.path.dirname(ABSPATH)
+        print(ABSPATH)
         analysis = os.listdir(ABSPATH + '/../PPO_pretrained/analysis/' + t)
         analysis.sort()
         for file in analysis:
