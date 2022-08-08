@@ -387,42 +387,43 @@ if __name__ == '__main__':
     device = set_device() if args.cuda_cpu == "cpu" else set_device(args.cuda)
     type = ['response', 'resistance']
     AVA_REWARD = {}
-    analysis = os.listdir('./PPO_policy/analysis/')
-    analysis.sort()
-    for file in analysis:
-        Number = int(file[7:10])
-        args.number = Number
-        patientNo = file[:10]
-        # if len(str(args.number)) == 1:
-        #     patientNo = "patient00" + str(args.number)
-        # elif len(str(args.number)) == 2:
-        #     patientNo = "patient0" + str(args.number)
-        # else:
-        #     patientNo = "patient" + str(args.number)
-        ending_states = ending_states_all_patients.loc[args.number]
-        args.m2_ad, args.m2_ai, args.ad_end_c, args.sl = ending_states.m_ad, ending_states.m_ai, ending_states.c_ad, ending_states.sl
-        parslist = os.listdir(parsdir + patientNo)
-        clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
-        true_psa = np.array(clinical_data.loc[:, 4])
-        true_psa = true_psa[~np.isnan(true_psa)]
-        cell_size = 5.236e-10
-        mean_v = 5
-        Mean_psa = 22.1
-        PARS_LIST = []
-        # reading the ode parameters and the initial/terminal states
-        for arg in parslist:
+    for t in type:
+        analysis = os.listdir('../PPO_pretrained/analysis/' + t)
+        analysis.sort()
+        for file in analysis:
+            Number = int(file[7:10])
+            args.number = Number
+            patientNo = file[:10]
+            # if len(str(args.number)) == 1:
+            #     patientNo = "patient00" + str(args.number)
+            # elif len(str(args.number)) == 2:
+            #     patientNo = "patient0" + str(args.number)
+            # else:
+            #     patientNo = "patient" + str(args.number)
+            ending_states = ending_states_all_patients.loc[args.number]
+            args.m2_ad, args.m2_ai, args.ad_end_c, args.sl = ending_states.m_ad, ending_states.m_ai, ending_states.c_ad, ending_states.sl
+            parslist = os.listdir(parsdir + patientNo)
+            clinical_data = pd.read_csv("../data/dataTanaka/Bruchovsky_et_al/" + patientNo + ".txt", header=None)
+            true_psa = np.array(clinical_data.loc[:, 4])
+            true_psa = true_psa[~np.isnan(true_psa)]
+            cell_size = 5.236e-10
+            mean_v = 5
+            Mean_psa = 22.1
+            PARS_LIST = []
+            # reading the ode parameters and the initial/terminal states
+            for arg in parslist:
                 pars_df = pd.read_csv(parsdir + patientNo + '/' + arg)
                 _, K, states, pars, best_pars = [np.array(pars_df.loc[i, ~np.isnan(pars_df.loc[i, :])]) for i in range(5)]
                 PARS_LIST.append(best_pars)
-        Init = states[0:3]
-        PARS_ARR = np.stack(PARS_LIST)
-        pars = np.mean(PARS_ARR, axis=0)
-        args.patients_pars = (K, Init, pars)
+            Init = states[:3]
+            PARS_ARR = np.stack(PARS_LIST)
+            pars = np.mean(PARS_ARR, axis=0)
+            args.patients_pars = (K, Init, pars)
 
-        print("============================================================================================")
-        model_loc = '../PPO_pretrained/analysis/' + t +'/' +file
-        reward = test(args, model_loc, t)
-        AVA_REWARD[patientNo] = reward
+            print("============================================================================================")
+            model_loc = '../PPO_pretrained/analysis/' + t +'/' +file
+            reward = test(args, model_loc, t)
+            AVA_REWARD[patientNo] = reward
 
     AVA_REWARD = pd.DataFrame.from_dict(AVA_REWARD, orient='index')
     AVA_REWARD.to_csv('./Analysis/HK_average_rewards_all_patients.csv')
