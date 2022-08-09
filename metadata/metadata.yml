@@ -1,5 +1,6 @@
 metadata_version: 1
-name: PPOProstatecancer
+name: Deep reinforcement learning identifies personalized intermittent androgen deprivation
+  therapy for prostate cancer
 description: The evolution of drug resistance leads to treatment failure and tumor
   progression. Intermittent androgen deprivation therapy (IADT) helps responsive cancer
   cells compete with resistant cancer cells in intratumoral competition. However,
