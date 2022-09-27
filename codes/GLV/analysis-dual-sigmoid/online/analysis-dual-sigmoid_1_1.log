@@ -1,0 +1,6 @@
+nohup: ignoring input
+patient001
+Traceback (most recent call last):
+  File "/home/yitao/projects/PPOProstateCancer/codes/GLV/pre_glv_train_online.py", line 20, in <module>
+    alldata = LoadData().Double_Drug()
+NameError: name 'LoadData' is not defined

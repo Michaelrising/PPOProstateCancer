@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -ex
+
+# This is the master script for the capsule. When you click "Reproducible Run", the codes in this file will execute.
+python -u section2_3_1_resistance_dosing_analysis.py "$@"
+
+# The previous version of this file was commented-out and follows below:
+#
+# python -u section2_1_model_analysis.py "$@"
+# 
+# # The previous version of this file was commented-out and follows below:
+# #
+# # python -u section2_3_2_response_dosing_analysis.py "$@"
+# # 
+# 
